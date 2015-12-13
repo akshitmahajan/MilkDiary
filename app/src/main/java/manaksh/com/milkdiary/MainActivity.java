@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -35,23 +37,24 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.manaksh.milkdiary.adapter.ImageAdapter;
-import com.manaksh.milkdiary.model.DataBean;
+import com.manaksh.milkdiary.model.DailyData;
+import com.manaksh.milkdiary.model.ItemType;
+import com.manaksh.milkdiary.model.TransactionType;
 import com.manaksh.milkdiary.utils.Constants;
 
 public class MainActivity extends Activity {
 
     static String[] tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
     final Context context = this;
-    GridView grid, gridTag;
-    List<DataBean> ls_databean = new ArrayList<>();
-    List<DataBean> saved_ls_databean = new ArrayList<>();
+    GridView grid, gridTag = null;
+    List<DailyData> ls_databean = new ArrayList<DailyData>();
     Button btn_Save, btn_Calender = null;
-    ImageButton imageButton;
-    String[] reports = null;
-    private DatePicker datePicker;
-    private Calendar calendar;
-    private TextView dateView;
-    private int year, month, day;
+    ImageButton imageButton = null;
+    ArrayList<String> reports = new ArrayList<String>();
+    private DatePicker datePicker = null;
+    private Calendar calendar = null;
+    private TextView dateView = null;
+    private int year, month, day = 0;
     StringBuilder _thisDay = null;
 
     public ImageAdapter loadAdapter(String[] reports, TextView dateView, ImageAdapter adapterObj){
@@ -65,8 +68,18 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //READ TAGS FILE and load the #tags
-        tags = readFromFile(Constants.TAGS_FILE);
+        ArrayList<String> tagList = readFromFile(Constants.TAGS_FILE);
 
+        if(tagList==null){
+            tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
+        }
+        else{
+            int i=0;
+            for(String str : tagList){
+                tags[i] = str;
+                i++;
+            }
+        }
         //Initializes the calendarview
         dateView = (TextView) findViewById(R.id.textView3);
         calendar = Calendar.getInstance();
@@ -75,73 +88,28 @@ public class MainActivity extends Activity {
         day = calendar.get(Calendar.DAY_OF_MONTH);
         _thisDay = showDate(year, month + 1, day);
 
-        //Format : Date;Type;Value;Status$Date;Type;Value;Status$...
+        //Format : 12/12/2015,ORANGE,1.0,HIT
         //READ REPORTS FILE and load the view
         reports = readFromFile(Constants.REPORTS_FILE);
 
         final ImageAdapter adapterObj = new ImageAdapter(this);
-
         //adapterObj = loadAdapter(reports, dateView, adapterObj);
 
-        for (int i = 0; i < reports.length; i++) {
-            String[] data = reports[i].split(";");
+        if(reports!=null){
 
-            if (data[0].equals(dateView.getText().toString())) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>Inside reports loop");
-                int idNo = getResources().getIdentifier(data[2] + "_" + data[3], "drawable", context.getPackageName());
+            for (String str : reports) {
 
-                //compute position
-                int position = 0;
-                if (data[1].equals(Constants.ORANGE)) {
-                    if (data[2].equals("one")) {
-                        position = 4;
-                    } else if (data[2].equals("onefive")) {
-                        position = 8;
-                    } else if (data[2].equals("two")) {
-                        position = 12;
-                    } else if (data[2].equals("twofive")) {
-                        position = 16;
-                    } else if (data[2].equals("three")) {
-                        position = 20;
-                    }
-                } else if (data[1].equals(Constants.BLUE)) {
-                    if (data[2].equals("one")) {
-                        position = 5;
-                    } else if (data[2].equals("onefive")) {
-                        position = 9;
-                    } else if (data[2].equals("two")) {
-                        position = 13;
-                    } else if (data[2].equals("twofive")) {
-                        position = 17;
-                    } else if (data[2].equals("three")) {
-                        position = 21;
-                    }
-                } else if (data[1].equals(Constants.YELLOW)) {
-                    if (data[2].equals("one")) {
-                        position = 6;
-                    } else if (data[2].equals("onefive")) {
-                        position = 10;
-                    } else if (data[2].equals("two")) {
-                        position = 14;
-                    } else if (data[2].equals("twofive")) {
-                        position = 18;
-                    } else if (data[2].equals("three")) {
-                        position = 22;
-                    }
-                } else if (data[1].equals(Constants.BLACK)) {
-                    if (data[2].equals("one")) {
-                        position = 7;
-                    } else if (data[2].equals("onefive")) {
-                        position = 11;
-                    } else if (data[2].equals("two")) {
-                        position = 15;
-                    } else if (data[2].equals("twofive")) {
-                        position = 19;
-                    } else if (data[2].equals("three")) {
-                        position = 23;
-                    }
+                String[] data = str.split(",");
+
+                //split with . & form the image name
+                String[] image_name = data[2].split("\\.");
+
+                if (data[0].equals(dateView.getText().toString())) {
+
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                    int position = getPosition(data[2], data[1]);
+                    adapterObj.mThumbIds[position] = idNo;
                 }
-                adapterObj.mThumbIds[position] = idNo;
             }
         }
 
@@ -153,84 +121,54 @@ public class MainActivity extends Activity {
         grid.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View imgView, int position, long id) {
-                /*Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();*/
-
                 ImageView imageView = (ImageView) imgView;
                 String name = getResources().getResourceEntryName(mThumbs[position]);
-
+                //_1_0_DEFAULT
                 String[] splitName = name.split("_");
                 int idNo = 0;
-                String _type = null;
-
-                if (position == 4 || position == 8 || position == 12 || position == 16 || position == 20) {
-                    //data.set_type(tags[0]);
-                    _type = Constants.ORANGE;
-                } else if (position == 5 || position == 8 || position == 13 || position == 17 || position == 21) {
-                    _type = Constants.BLUE;
-                } else if (position == 6 || position == 9 || position == 14 || position == 18 || position == 22) {
-                    _type = Constants.YELLOW;
-                } else if (position == 7 || position == 10 || position == 15 || position == 19 || position == 23) {
-                    _type = Constants.BLACK;
-                } else {
-                    //do nothing
-                }
+                ItemType _type = Constants.PositionTypeMap.get(position);
 
                 if (position == 0 || position == 1 || position == 2 || position == 3) {
                     //Do nothing
                 }
                 else {
-                    /*for(DataBean data : ls_databean){
-                        //check date
-                        if(data.get_date().equals(dateView.getText().toString())){
-                            //check type
-                            if(data.get_type().equals(_type)){
-                                //check value
-                                if(data.get_value().equals(splitName[0])){
-                                    //only change the status
-                                    //set a flag
-                                }
-                            }
-                        }
-                    }*/
-
                     //Create a new object and set everything
-                    //DataBean data_new = new DataBean();
-                    DataBean data = new DataBean();
+                    DailyData dailyData = new DailyData();
 
                     if (dateView != null) {
-                        data.set_date(dateView.getText().toString());
-                    } else {
-                        data.set_date("01/01/2000");
-                    }
-                    data.set_value(splitName[0]);
-                    data.set_type(_type);
+                        dailyData.setDate(dateView.getText().toString());
 
-                    switch (splitName[1]) {
+                    } else {
+                        dailyData.setDate("01/01/2000");
+                    }
+
+                    dailyData.setType(_type);
+                    dailyData.setQuantity(Double.parseDouble(splitName[1]+"."+splitName[2]));
+
+                    switch (splitName[3]) {
                         //DEFAULT->HIT
-                        case Constants.DEFAULT:
-                            idNo = getResources().getIdentifier(splitName[0] + "_1", "drawable", context.getPackageName());
+                        case Constants.STEADY:
+                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_hit", "drawable", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
-                            data.set_state(Constants.HIT);
+                            dailyData.setTransactionType(TransactionType.hit);
                             break;
                         //HIT->MISS
                         case Constants.HIT:
-                            idNo = getResources().getIdentifier(splitName[0] + "_2", "drawable", context.getPackageName());
+                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2]  + "_miss", "drawable", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
-                            data.set_state(Constants.MISS);
+                            dailyData.setTransactionType(TransactionType.miss);
                             break;
                         //MISS->DEFAULT
                         case Constants.MISS:
-                            idNo = context.getResources().getIdentifier(splitName[0] + "_0", "drawable", context.getPackageName());
+                            idNo = context.getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_steady", "drawable", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
-                            data.set_state(Constants.DEFAULT);
+                            dailyData.setTransactionType(TransactionType.steady);
                             break;
                     }
-
-                    ls_databean.add(data);
+                    ls_databean.add(dailyData);
                 }
             }
         });
@@ -294,13 +232,9 @@ public class MainActivity extends Activity {
                                 String allTags = "";
 
                                 for (int i = 0; i < tags.length; i++) {
-
-                                    System.out.print(tags[i] + " ");
-                                    allTags = allTags + tags[i] + ";";
+                                    allTags = allTags + tags[i] + ",";
                                 }
-
                                 writeToFile(allTags);
-
                                 //Set color of the tag
                                 String colorHex = "";
 
@@ -315,10 +249,6 @@ public class MainActivity extends Activity {
                                     colorHex = "BLACK";
                                 }
                                 ((TextView) v1).setTextColor(Color.parseColor(colorHex));
-
-                                //change the value of #tag
-                                //Toast.makeText(getApplicationContext(),
-                                //      ((TextView) v1).getText(), Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("Cancel",
@@ -397,73 +327,39 @@ public class MainActivity extends Activity {
 
                 //adapterObj = loadAdapter(reports, dateView, adapterObj);
 
-                for (int i = 0; i < reports.length; i++) {
-                    String[] data = reports[i].split(";");
+                for (String str : reports) {
+
+                    String[] data = str.split(",");
+                    //split with . & form the image name
+                    String[] image_name = data[2].split("\\.");
 
                     if (data[0].equals(dateView.getText().toString())) {
-                        System.out.println(">>>>>>>>>>>>>>>>>>>>>Inside reports loop");
-                        int idNo = getResources().getIdentifier(data[2] + "_" + data[3], "drawable", context.getPackageName());
-
-                        //compute position
-                        int position = 0;
-                        if (data[1].equals(Constants.ORANGE)) {
-                            if (data[2].equals("one")) {
-                                position = 4;
-                            } else if (data[2].equals("onefive")) {
-                                position = 8;
-                            } else if (data[2].equals("two")) {
-                                position = 12;
-                            } else if (data[2].equals("twofive")) {
-                                position = 16;
-                            } else if (data[2].equals("three")) {
-                                position = 20;
-                            }
-                        } else if (data[1].equals(Constants.BLUE)) {
-                            if (data[2].equals("one")) {
-                                position = 5;
-                            } else if (data[2].equals("onefive")) {
-                                position = 9;
-                            } else if (data[2].equals("two")) {
-                                position = 13;
-                            } else if (data[2].equals("twofive")) {
-                                position = 17;
-                            } else if (data[2].equals("three")) {
-                                position = 21;
-                            }
-                        } else if (data[1].equals(Constants.YELLOW)) {
-                            if (data[2].equals("one")) {
-                                position = 6;
-                            } else if (data[2].equals("onefive")) {
-                                position = 10;
-                            } else if (data[2].equals("two")) {
-                                position = 14;
-                            } else if (data[2].equals("twofive")) {
-                                position = 18;
-                            } else if (data[2].equals("three")) {
-                                position = 22;
-                            }
-                        } else if (data[1].equals(Constants.BLACK)) {
-                            if (data[2].equals("one")) {
-                                position = 7;
-                            } else if (data[2].equals("onefive")) {
-                                position = 11;
-                            } else if (data[2].equals("two")) {
-                                position = 15;
-                            } else if (data[2].equals("twofive")) {
-                                position = 19;
-                            } else if (data[2].equals("three")) {
-                                position = 23;
-                            }
-                        }
+                        String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
+                        int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                        int position = getPosition(data[2], data[1]);
                         adapterObj.mThumbIds[position] = idNo;
                     }
                 }
                 grid = (GridView) findViewById(R.id.gridView);
                 grid.setAdapter(adapterObj);
-
             }
         }
     };
+
+    public int getPosition(String input, String type){
+        //compute position
+        int position = 0;
+        if (type.equals(Constants.TYPE1)) {
+            position = Constants.Type1Map.get(input);
+        } else if (type.equals(Constants.TYPE2)) {
+            position = Constants.Type2Map.get(input);
+        } else if (type.equals(Constants.TYPE3)) {
+            position = Constants.Type3Map.get(input);
+        } else if (type.equals(Constants.TYPE4)) {
+            position = Constants.Type4Map.get(input);
+        }
+        return position;
+    }
 
     /*public void addListenerOnDate(TextView dateView) {
 
@@ -488,11 +384,17 @@ public class MainActivity extends Activity {
 
         try {
             FileOutputStream fileout = openFileOutput(Constants.TAGS_FILE, MODE_PRIVATE);
-            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-            outputWriter.write(txt);
+            BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(fileout));
+            //OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+            //comma , split string tags
+            String[] tags = txt.split(",");
+            for(String tag : tags){
+                outputWriter.write(tag);
+                outputWriter.newLine();
+            }
             outputWriter.close();
 
-            Toast.makeText(getBaseContext(), "File saved successfully!",
+            Toast.makeText(getBaseContext(), "Tags saved successfully!",
                     Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
@@ -500,23 +402,26 @@ public class MainActivity extends Activity {
         }
     }
 
-    public boolean writeToFile(List<DataBean> dataBean) {
+    public boolean writeToFile(List<DailyData> dailyDataList) {
 
         try {
             FileOutputStream fileout = openFileOutput(Constants.REPORTS_FILE, MODE_APPEND);
-            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+            BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(fileout));
+            //OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 
-            if (dataBean == null) {
+            if (dailyDataList == null) {
                 return false;
             }
             else {
-                for (DataBean data : dataBean) {
+                for (DailyData data : dailyDataList) {
                     String txt = "";
-                    if (data.get_date().equals("") || data.get_state().equals("") || data.get_value().equals("") || data.get_type().equals("")) {
+                    if (data.getDate().equals("") || data.getType()==null || data.getQuantity()==0 || data.getTransactionType()==null) {
                         return false;
-                    } else {
-                        txt = data.get_date() + ";" + data.get_type() + ";" + data.get_value() + ";" + data.get_state() + "$";
+                    }
+                    else {
+                        txt = data.getDate() + "," + data.getType() + "," + data.getQuantity() + "," + data.getTransactionType();
                         outputWriter.write(txt);
+                        outputWriter.newLine();
                     }
                 }
                 outputWriter.close();
@@ -532,50 +437,35 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    public String[] readFromFile(String FILE_NAME) {
 
-        String[] _fromFile = null;
+    public ArrayList<String> readFromFile(String FILE_NAME) {
 
+        ArrayList<String> listfromFile = new ArrayList<String>();
         FileInputStream fileIn = null;
         InputStreamReader InputRead = null;
+        BufferedReader br = null;
 
-        //reading text from file
         try {
+
             fileIn = openFileInput(FILE_NAME);
-            InputRead = new InputStreamReader(fileIn);
+            String sCurrentLine;
 
-            char[] inputBuffer = new char[Constants.READ_BLOCK_SIZE];
-            String s = "";
-            int charRead;
-
-            while ((charRead = InputRead.read(inputBuffer)) > 0) {
-                // char to string conversion
-                String readstring = String.copyValueOf(inputBuffer, 0, charRead);
-                s += readstring;
-            }
-            Toast.makeText(getBaseContext(), s, Toast.LENGTH_SHORT).show();
-            System.out.println(">>>>>>>>>>>>>>>>>>>>" + s);
-            if (s.contains("$") && s.contains(";")) {
-                _fromFile = s.split("\\$");
-
-            } else if (s.contains(";")) {
-                _fromFile = s.split(";");
+            br = new BufferedReader(new InputStreamReader(fileIn));
+            while ((sCurrentLine = br.readLine()) != null) {
+                listfromFile.add(sCurrentLine);
             }
 
-            InputRead.close();
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (InputRead != null) {
-                try {
-                    InputRead.close();
-                } catch (IOException e) {
-                }
+            try {
+                if (br != null)br.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
 
-        return _fromFile;
+        return listfromFile;
     }
 
     @Override
@@ -596,7 +486,6 @@ public class MainActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

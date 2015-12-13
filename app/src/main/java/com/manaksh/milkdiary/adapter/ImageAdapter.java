@@ -17,16 +17,16 @@ public class ImageAdapter extends BaseAdapter {
     public Integer[] mThumbIds = {
             R.drawable.orange, R.drawable.blue,
             R.drawable.yellow, R.drawable.milkman,
-            R.drawable.one_0, R.drawable.one_0,
-            R.drawable.one_0, R.drawable.one_0,
-            R.drawable.onefive_0, R.drawable.onefive_0,
-            R.drawable.onefive_0, R.drawable.onefive_0,
-            R.drawable.two_0, R.drawable.two_0,
-            R.drawable.two_0, R.drawable.two_0,
-            R.drawable.twofive_0, R.drawable.twofive_0,
-            R.drawable.twofive_0, R.drawable.twofive_0,
-            R.drawable.three_0, R.drawable.three_0,
-            R.drawable.three_0, R.drawable.three_0
+            R.drawable._1_0_steady, R.drawable._1_0_steady,
+            R.drawable._1_0_steady, R.drawable._1_0_steady,
+            R.drawable._1_5_steady, R.drawable._1_5_steady,
+            R.drawable._1_5_steady, R.drawable._1_5_steady,
+            R.drawable._2_0_steady, R.drawable._2_0_steady,
+            R.drawable._2_0_steady, R.drawable._2_0_steady,
+            R.drawable._2_5_steady, R.drawable._2_5_steady,
+            R.drawable._2_5_steady, R.drawable._2_5_steady,
+            R.drawable._3_0_steady, R.drawable._3_0_steady,
+            R.drawable._3_0_steady, R.drawable._3_0_steady
     };
 
     // Map each state to its graphics.

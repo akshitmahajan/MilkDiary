@@ -1,7 +1,7 @@
 package com.manaksh.milkdiary.model;
 
 /**
- * Created by akshmaha on 12/1/2015.
+ * Created by akshmaha on 12/_1/2015.
  * <p/>
  * Type is the hashtag
  * date is the date_selected
