@@ -312,7 +312,7 @@ public class MainActivity extends Activity {
                 ImageAdapter adapterObj = new ImageAdapter(context);
 
                 //adapterObj = loadAdapter(reports, dateView, adapterObj);
-
+                reports = readFromFile(Constants.REPORTS_FILE);
                 for (String str : reports) {
 
                     String[] data = str.split(",");
