@@ -117,7 +117,6 @@ public class MainActivity extends Activity {
         grid = (GridView) findViewById(R.id.gridView);
         //grid.setAdapter(new ImageAdapter(this));
         grid.setAdapter(adapterObj);
-
         grid.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View imgView, int position, long id) {
@@ -173,21 +172,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        /*imageButton = (ImageButton) findViewById(R.id.imageButton1);
-        imageButton.setLayoutParams(new RelativeLayout.LayoutParams(160, 160));
-        imageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageButton.setPadding(10, 10, 10, 10);
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(MainActivity.this, "" + "Calender clicked",
-                        Toast.LENGTH_SHORT).show();
-                setDate(v);
-            }
-        });*/
-
         btn_Calender = (Button) findViewById(R.id.button1);
         btn_Calender.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +188,8 @@ public class MainActivity extends Activity {
         gridTag.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     final int position, long id) {
+
+                ls_databean.clear();
                 final View v1 = v;
 
                 //get prompt.xml view
@@ -316,7 +302,7 @@ public class MainActivity extends Activity {
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            // TODO Auto-generated method stub
+            ls_databean.clear();
             // arg1 = year
             // arg2 = month
             // arg3 = day
