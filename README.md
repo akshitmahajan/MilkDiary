@@ -15,3 +15,4 @@ Do you often forget to log entry in your diary or do you face issues in calculat
 
 Well, now you don't have to worry about maintaining a diary or a log to keep track of your milk coz, MilkDiary is here. 
 MilkDiary is an Android application which helps you to keep track of your daily & important commodities - milk. It also generates monthly reports to track purchase, expenses, consumption etc..
+Test update
