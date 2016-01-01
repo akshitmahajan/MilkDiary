@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,9 +46,10 @@ public class DiaryFragment extends Fragment {
     Context context = null;
     GridView grid, gridTag = null;
     List<DailyData> ls_databean = new ArrayList<DailyData>();
-    Button btn_Save, btn_Calender = null;
+    Button btn_Save = null;
     ArrayList<String> reports = new ArrayList<String>();
     StringBuilder _thisDay = null;
+    ImageButton arrowLeft, arrowRight = null;
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
@@ -84,7 +86,7 @@ public class DiaryFragment extends Fragment {
     View rootView = null;
     private DatePicker datePicker = null;
     private Calendar calendar = null;
-    private TextView dateView = null;
+    private TextView    dateView = null;
     private int year, month, day = 0;
 
     @Override
@@ -284,26 +286,35 @@ public class DiaryFragment extends Fragment {
 
         });
 
-        btn_Calender = (Button) rootView.findViewById(R.id.calenderBtn);
-
-        btn_Calender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DatePickerDialog dpdFromDate = new DatePickerDialog(getActivity(), myDateListener, year, month, day);
-                dpdFromDate.show();
-
-            }
-        });
-
-
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 DatePickerDialog dpdFromDate = new DatePickerDialog(getActivity(), myDateListener, year, month, day);
                 dpdFromDate.show();
+
             }
         });
+
+
+        arrowLeft = (ImageButton) rootView.findViewById(R.id.arrowLeft);
+        arrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                day=day-1;
+                _thisDay = showDate(year, month + 1, day);
+            }
+        });
+
+        arrowRight = (ImageButton) rootView.findViewById(R.id.arrowRight);
+        arrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                day=day+1;
+                _thisDay = showDate(year, month + 1, day);
+            }
+        });
+
         return rootView;
     }
 
