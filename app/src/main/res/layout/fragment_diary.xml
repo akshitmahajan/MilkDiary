@@ -1,9 +1,27 @@
-<!-- <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.manaksh.milkdiary.fragments.DiaryFragment">
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    android:orientation="vertical"
+    android:background="#fa6a6a" >
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Design Top Rated Screen"
+        android:textSize="20dp"
+        android:layout_centerInParent="true"/>
+
+
+</RelativeLayout>-->
+
+<!-- <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.manaksh.milkdiary.fragments.DiaryFragment">
+<TextView android:layout_width="match_parent" android:layout_height="match_parent"
+    android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>-->
 
@@ -14,42 +32,136 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button1"
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="*"  android:stretchColumns="*">
+
+        <TableRow android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="40dp">
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+                <!--android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center_horizontal">-->
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/arrowLeft"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/arrow_left_b"
+                    android:background="@color/transparent"/>
+
+                <TextView
+                    android:id="@+id/dateView"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:width="@android:dimen/thumbnail_height"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/arrowRight"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="0dp"
+                    android:src="@drawable/arrow_right_b"
+                    android:background="@color/transparent" />
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
+
+    <!--<TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calndr" />
+        android:shrinkColumns="*"  android:stretchColumns="*">
 
-    <TextView
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_height="@android:dimen/thumbnail_height"
+            android:layout_width="match_parent"
+            android:minHeight="@dimen/activity_horizontal_margin">
+            <ImageButton
+                android:layout_width="@android:dimen/dialog_min_width_major"
+                android:layout_height="wrap_content"
+                android:id="@+id/arrowLeft"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/arrow_left_b"
+                android:background="@color/transparent" />
+
+            <TextView
+                android:id="@+id/TextView05" android:text="Row 2 column 2"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:padding="20dp"
+                android:textSize="@dimen/activity_horizontal_margin"
+                android:textStyle="bold"
+                android:width="@android:dimen/thumbnail_height" />
+
+            <ImageButton
+                android:layout_width="@android:dimen/dialog_min_width_major"
+                android:layout_height="wrap_content"
+                android:id="@+id/arrowRight"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/arrow_right_b"
+                android:background="@color/transparent" />
+        </TableRow>
+    </TableLayout>-->
+
+    <Button
+        android:id="@+id/calenderBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:text="Calender" />
+
+    <!--<TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_toEndOf="@id/button1" />
+        android:layout_toEndOf="@id/button1" />-->
 
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/gridView0"
+        android:id="@+id/labelGrid"
         android:numColumns="4"
         android:choiceMode="singleChoice"
         android:longClickable="true"
         android:nestedScrollingEnabled="false"
-        android:clickable="false"
+        android:clickable="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="false"
         android:layout_alignParentTop="false"
-        android:paddingTop="30dp"
-        android:layout_alignStart="@id/gridView0" />
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:layout_alignStart="@id/labelGrid" />
 
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/gridView"
+        android:id="@+id/valueGrid"
         android:numColumns="4"
         android:choiceMode="singleChoice"
         android:longClickable="true"
         android:nestedScrollingEnabled="false"
+        android:paddingTop="20dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
@@ -59,10 +171,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:id="@+id/button"
+        android:id="@+id/saveBtn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/gridView"
+        android:layout_alignBottom="@+id/valueGrid"
         android:clickable="true" />
 
 </RelativeLayout>
