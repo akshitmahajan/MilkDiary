@@ -1,8 +1,8 @@
 package com.manaksh.milkdiary.model;
 
 public enum ItemType {
-	ORANGE,
-	BLUE,
-	YELLOW,
-	BLACK;
+    ORANGE,
+    BLUE,
+    YELLOW,
+    BLACK;
 }

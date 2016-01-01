@@ -1,10 +1,10 @@
 package manaksh.com.milkdiary;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 
 import com.manaksh.milkdiary.adapter.TabsPagerAdapter;
 
@@ -15,7 +15,7 @@ public class MainActivity extends FragmentActivity implements
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = { "Diary", "Reports" };
+    private String[] tabs = {"Diary", "Reports"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

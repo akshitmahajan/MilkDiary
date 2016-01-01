@@ -16,10 +16,15 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.manaksh.milkdiary.adapter.ImageAdapter;
+import com.manaksh.milkdiary.model.DailyData;
+import com.manaksh.milkdiary.model.ItemType;
+import com.manaksh.milkdiary.model.TransactionType;
+import com.manaksh.milkdiary.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,9 +39,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import manaksh.com.milkdiary.R;
-import com.manaksh.milkdiary.model.*;
-import com.manaksh.milkdiary.utils.Constants;
-import com.manaksh.milkdiary.adapter.ImageAdapter;
 
 public class DiaryFragment extends Fragment {
     static String[] tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
@@ -45,13 +47,45 @@ public class DiaryFragment extends Fragment {
     List<DailyData> ls_databean = new ArrayList<DailyData>();
     Button btn_Save, btn_Calender = null;
     ArrayList<String> reports = new ArrayList<String>();
+    StringBuilder _thisDay = null;
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+            ls_databean.clear();
+            // arg1 = year
+            // arg2 = month
+            // arg3 = day
+            StringBuilder date = showDate(arg1, arg2 + 1, arg3);
+            if (!(date.equals(_thisDay))) {
+
+                ImageAdapter adapterObj = new ImageAdapter(context);
+
+                //adapterObj = loadAdapter(reports, dateView, adapterObj);
+                reports = readFromFile(Constants.REPORTS_FILE);
+                for (String str : reports) {
+
+                    String[] data = str.split(",");
+                    //split with . & form the image name
+                    String[] image_name = data[2].split("\\.");
+
+                    if (data[0].equals(dateView.getText().toString())) {
+                        String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
+                        int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                        int position = getPosition(data[2], data[1]);
+                        adapterObj.mThumbIds[position] = idNo;
+                    }
+                }
+                grid = (GridView) rootView.findViewById(R.id.valueGrid);
+                grid.setAdapter(adapterObj);
+            }
+        }
+    };
+    TextView calenderBtn = null;
+    View rootView = null;
     private DatePicker datePicker = null;
     private Calendar calendar = null;
     private TextView dateView = null;
     private int year, month, day = 0;
-    StringBuilder _thisDay = null;
-    TextView calenderBtn = null;
-    View rootView = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,12 +98,11 @@ public class DiaryFragment extends Fragment {
         //READ TAGS FILE and load the #tags
         ArrayList<String> tagList = readFromFile(Constants.TAGS_FILE);
 
-        if(tagList==null){
+        if (tagList == null) {
             tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
-        }
-        else{
-            int i=0;
-            for(String str : tagList){
+        } else {
+            int i = 0;
+            for (String str : tagList) {
                 tags[i] = str;
                 i++;
             }
@@ -87,7 +120,7 @@ public class DiaryFragment extends Fragment {
         final ImageAdapter adapterObj = new ImageAdapter(context);
         //adapterObj = loadAdapter(reports, dateView, adapterObj);
 
-        if(reports!=null){
+        if (reports != null) {
 
             for (String str : reports) {
 
@@ -120,8 +153,7 @@ public class DiaryFragment extends Fragment {
 
                 if (position == 0 || position == 1 || position == 2 || position == 3) {
                     //Do nothing
-                }
-                else {
+                } else {
                     //Create a new object and set everything
                     DailyData dailyData = new DailyData();
 
@@ -133,7 +165,7 @@ public class DiaryFragment extends Fragment {
                     }
 
                     dailyData.setType(_type);
-                    dailyData.setQuantity(Double.parseDouble(splitName[1]+"."+splitName[2]));
+                    dailyData.setQuantity(Double.parseDouble(splitName[1] + "." + splitName[2]));
 
                     switch (splitName[3]) {
                         //DEFAULT->HIT
@@ -145,7 +177,7 @@ public class DiaryFragment extends Fragment {
                             break;
                         //HIT->MISS
                         case Constants.HIT:
-                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2]  + "_miss", "drawable", context.getPackageName());
+                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_miss", "drawable", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
                             dailyData.setTransactionType(TransactionType.miss);
@@ -241,14 +273,6 @@ public class DiaryFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                // Execute some code after 2 seconds have passed
-                //Handler handler = new Handler();
-                /*handler.postDelayed(new Runnable() {
-                    public void run() {
-                        ReadFromFile();
-                    }
-                }, 2000);*/
-
                 boolean _result = writeToFile(ls_databean);
 
                 if (_result) {
@@ -269,17 +293,8 @@ public class DiaryFragment extends Fragment {
                 DatePickerDialog dpdFromDate = new DatePickerDialog(getActivity(), myDateListener, year, month, day);
                 dpdFromDate.show();
 
-                /*dpdFromDate.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_NEGATIVE) {
-                            //et_to_date.setText("");
-                            dateView.setText("");
-                        }
-                    }
-                });*/
             }
         });
-
 
 
         dateView.setOnClickListener(new View.OnClickListener() {
@@ -299,40 +314,7 @@ public class DiaryFragment extends Fragment {
         return date;
     }
 
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            ls_databean.clear();
-            // arg1 = year
-            // arg2 = month
-            // arg3 = day
-            StringBuilder date = showDate(arg1, arg2 + 1, arg3);
-            if(!(date.equals(_thisDay))){
-
-                ImageAdapter adapterObj = new ImageAdapter(context);
-
-                //adapterObj = loadAdapter(reports, dateView, adapterObj);
-                reports = readFromFile(Constants.REPORTS_FILE);
-                for (String str : reports) {
-
-                    String[] data = str.split(",");
-                    //split with . & form the image name
-                    String[] image_name = data[2].split("\\.");
-
-                    if (data[0].equals(dateView.getText().toString())) {
-                        String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
-                        int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
-                        int position = getPosition(data[2], data[1]);
-                        adapterObj.mThumbIds[position] = idNo;
-                    }
-                }
-                grid = (GridView) rootView.findViewById(R.id.valueGrid);
-                grid.setAdapter(adapterObj);
-            }
-        }
-    };
-
-    public int getPosition(String input, String type){
+    public int getPosition(String input, String type) {
         //compute position
         int position = 0;
         if (type.equals(Constants.TYPE1)) {
@@ -357,7 +339,7 @@ public class DiaryFragment extends Fragment {
             //OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
             //comma , split string tags
             String[] tags = txt.split(",");
-            for(String tag : tags){
+            for (String tag : tags) {
                 outputWriter.write(tag);
                 outputWriter.newLine();
             }
@@ -380,14 +362,12 @@ public class DiaryFragment extends Fragment {
 
             if (dailyDataList == null) {
                 return false;
-            }
-            else {
+            } else {
                 for (DailyData data : dailyDataList) {
                     String txt = "";
-                    if (data.getDate().equals("") || data.getType()==null || data.getQuantity()==0 || data.getTransactionType()==null) {
+                    if (data.getDate().equals("") || data.getType() == null || data.getQuantity() == 0 || data.getTransactionType() == null) {
                         return false;
-                    }
-                    else {
+                    } else {
                         txt = data.getDate() + "," + data.getType() + "," + data.getQuantity() + "," + data.getTransactionType();
                         outputWriter.write(txt);
                         outputWriter.newLine();
@@ -427,7 +407,7 @@ public class DiaryFragment extends Fragment {
             e.printStackTrace();
         } finally {
             try {
-                if (br != null)br.close();
+                if (br != null) br.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

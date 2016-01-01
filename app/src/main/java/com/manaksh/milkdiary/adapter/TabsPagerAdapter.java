@@ -3,6 +3,7 @@ package com.manaksh.milkdiary.adapter;
 /**
  * Created by akshmaha on 12/14/2015.
  */
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;

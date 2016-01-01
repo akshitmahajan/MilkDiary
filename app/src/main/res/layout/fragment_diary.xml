@@ -26,59 +26,65 @@ tools:context="com.manaksh.milkdiary.fragments.DiaryFragment">
 </FrameLayout>-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
-    android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    tools:context=".MainActivity">
 
     <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:shrinkColumns="*"  android:stretchColumns="*">
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
 
-        <TableRow android:layout_width="wrap_content"
+        <TableRow
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="40dp">
+
             <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
                 <!--android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:gravity="center_horizontal">-->
                 <ImageButton
+                    android:id="@+id/arrowLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/arrowLeft"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/arrow_left_b"
-                    android:background="@color/transparent"/>
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparent"
+                    android:src="@drawable/arrow_left_b" />
 
                 <TextView
                     android:id="@+id/dateView"
-                    android:layout_weight="1"
-                    android:textColor="#000000"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textSize="@dimen/activity_horizontal_margin"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:width="@android:dimen/thumbnail_height"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:width="@android:dimen/thumbnail_height"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    android:textStyle="bold" />
+
+                <ImageButton
                     android:id="@+id/arrowRight"
-                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparent"
                     android:paddingTop="0dp"
-                    android:src="@drawable/arrow_right_b"
-                    android:background="@color/transparent" />
+                    android:src="@drawable/arrow_right_b" />
             </LinearLayout>
         </TableRow>
     </TableLayout>
@@ -127,8 +133,8 @@ tools:context="com.manaksh.milkdiary.fragments.DiaryFragment">
         android:id="@+id/calenderBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:text="Calender" />
+        android:text="Calender"
+        android:visibility="visible" />
 
     <!--<TextView
         android:id="@+id/textView3"
@@ -138,44 +144,44 @@ tools:context="com.manaksh.milkdiary.fragments.DiaryFragment">
         android:layout_toEndOf="@id/button1" />-->
 
     <GridView
+        android:id="@+id/labelGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/labelGrid"
-        android:numColumns="4"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:layout_alignStart="@id/labelGrid"
         android:choiceMode="singleChoice"
+        android:clickable="true"
         android:longClickable="true"
         android:nestedScrollingEnabled="false"
-        android:clickable="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentTop="false"
-        android:paddingTop="20dp"
+        android:numColumns="4"
         android:paddingBottom="10dp"
-        android:layout_alignStart="@id/labelGrid" />
+        android:paddingTop="20dp" />
 
     <GridView
+        android:id="@+id/valueGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/valueGrid"
-        android:numColumns="4"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:choiceMode="singleChoice"
         android:longClickable="true"
         android:nestedScrollingEnabled="false"
-        android:paddingTop="20dp"
+        android:numColumns="4"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:paddingBottom="@dimen/activity_horizontal_margin" />
+        android:paddingTop="20dp" />
 
     <Button
+        android:id="@+id/saveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/saveBtn"
+        android:layout_alignBottom="@+id/valueGrid"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/valueGrid"
-        android:clickable="true" />
+        android:clickable="true"
+        android:text="Save" />
 
 </RelativeLayout>
 
