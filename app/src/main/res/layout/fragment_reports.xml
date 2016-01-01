@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.manaksh.milkdiary.fragments.ReportsFragment">
+    tools:context="com.manaksh.milkdiary.fragments.ReportsFragment"
+    android:background="@color/darkgreen">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
