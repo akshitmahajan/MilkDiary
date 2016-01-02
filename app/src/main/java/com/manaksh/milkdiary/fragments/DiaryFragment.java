@@ -35,8 +35,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import manaksh.com.milkdiary.R;
@@ -50,6 +54,7 @@ public class DiaryFragment extends Fragment {
     ArrayList<String> reports = new ArrayList<String>();
     StringBuilder _thisDay = null;
     ImageButton arrowLeft, arrowRight = null;
+
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
@@ -86,7 +91,7 @@ public class DiaryFragment extends Fragment {
     View rootView = null;
     private DatePicker datePicker = null;
     private Calendar calendar = null;
-    private TextView    dateView = null;
+    private TextView dateView = null;
     private int year, month, day = 0;
 
     @Override
@@ -301,8 +306,22 @@ public class DiaryFragment extends Fragment {
         arrowLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                day=day-1;
-                _thisDay = showDate(year, month + 1, day);
+
+                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+
+                    Date date = formatter.parse(dateView.getText().toString());
+                    Calendar cal  = Calendar.getInstance();
+                    cal.setTime(date);
+                    cal.add(Calendar.DATE, -1);
+                    year = cal.get(Calendar.YEAR);
+                    month = cal.get(Calendar.MONTH);
+                    day = cal.get(Calendar.DAY_OF_MONTH);
+                    _thisDay = showDate(year, month + 1, day);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -310,8 +329,21 @@ public class DiaryFragment extends Fragment {
         arrowRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                day=day+1;
-                _thisDay = showDate(year, month + 1, day);
+                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+
+                    Date date = formatter.parse(dateView.getText().toString());
+                    Calendar cal  = Calendar.getInstance();
+                    cal.setTime(date);
+                    cal.add(Calendar.DATE, 1);
+                    year = cal.get(Calendar.YEAR);
+                    month = cal.get(Calendar.MONTH);
+                    day = cal.get(Calendar.DAY_OF_MONTH);
+                    _thisDay = showDate(year, month+1, day);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
