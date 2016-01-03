@@ -4,7 +4,9 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.manaksh.milkdiary.adapter.TabsPagerAdapter;
 
@@ -55,6 +57,16 @@ public class MainActivity extends FragmentActivity implements
 
             @Override
             public void onPageScrollStateChanged(int arg0) {
+            }
+        });
+
+        android.app.FragmentManager fm = getFragmentManager();
+        fm.addOnBackStackChangedListener(new android.app.FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                Toast.makeText(getBaseContext(), "Press once again to exit!",
+                        Toast.LENGTH_SHORT).show();
+                if(getSupportFragmentManager().getBackStackEntryCount() == 0) finish();
             }
         });
     }

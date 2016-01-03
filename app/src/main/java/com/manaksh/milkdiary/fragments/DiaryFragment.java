@@ -46,6 +46,7 @@ import java.util.List;
 import manaksh.com.milkdiary.R;
 
 public class DiaryFragment extends Fragment {
+
     static String[] tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
     Context context = null;
     GridView grid, gridTag = null;
@@ -54,6 +55,12 @@ public class DiaryFragment extends Fragment {
     ArrayList<String> reports = new ArrayList<String>();
     StringBuilder _thisDay = null;
     ImageButton arrowLeft, arrowRight = null;
+    TextView calenderBtn = null;
+    View rootView = null;
+    private DatePicker datePicker = null;
+    private Calendar calendar = null;
+    private TextView dateView = null;
+    private int year, month, day = 0;
 
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -64,35 +71,10 @@ public class DiaryFragment extends Fragment {
             // arg3 = day
             StringBuilder date = showDate(arg1, arg2 + 1, arg3);
             if (!(date.equals(_thisDay))) {
-
-                ImageAdapter adapterObj = new ImageAdapter(context);
-
-                //adapterObj = loadAdapter(reports, dateView, adapterObj);
-                reports = readFromFile(Constants.REPORTS_FILE);
-                for (String str : reports) {
-
-                    String[] data = str.split(",");
-                    //split with . & form the image name
-                    String[] image_name = data[2].split("\\.");
-
-                    if (data[0].equals(dateView.getText().toString())) {
-                        String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
-                        int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
-                        int position = getPosition(data[2], data[1]);
-                        adapterObj.mThumbIds[position] = idNo;
-                    }
-                }
-                grid = (GridView) rootView.findViewById(R.id.valueGrid);
-                grid.setAdapter(adapterObj);
+                setView();
             }
         }
     };
-    TextView calenderBtn = null;
-    View rootView = null;
-    private DatePicker datePicker = null;
-    private Calendar calendar = null;
-    private TextView dateView = null;
-    private int year, month, day = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,7 +96,6 @@ public class DiaryFragment extends Fragment {
                 i++;
             }
         }
-
         //Initializes the calendarview
         dateView = (TextView) rootView.findViewById(R.id.dateView);
         calendar = Calendar.getInstance();
@@ -318,7 +299,7 @@ public class DiaryFragment extends Fragment {
                     month = cal.get(Calendar.MONTH);
                     day = cal.get(Calendar.DAY_OF_MONTH);
                     _thisDay = showDate(year, month + 1, day);
-
+                    setView();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -331,7 +312,6 @@ public class DiaryFragment extends Fragment {
             public void onClick(View v) {
                 DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-
                     Date date = formatter.parse(dateView.getText().toString());
                     Calendar cal  = Calendar.getInstance();
                     cal.setTime(date);
@@ -340,7 +320,7 @@ public class DiaryFragment extends Fragment {
                     month = cal.get(Calendar.MONTH);
                     day = cal.get(Calendar.DAY_OF_MONTH);
                     _thisDay = showDate(year, month+1, day);
-
+                    setView();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -348,6 +328,33 @@ public class DiaryFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void setView(){
+        ImageAdapter adapterObj = new ImageAdapter(context);
+
+        reports = readFromFile(Constants.REPORTS_FILE);
+
+        if((reports!=null) && (reports.size()!=0)){
+            for (String str : reports) {
+
+                String[] data = str.split(",");
+                //split with . & form the image name
+                String[] image_name = data[2].split("\\.");
+
+                if (data[0].equals(dateView.getText().toString())) {
+                    String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                    int position = getPosition(data[2], data[1]);
+                    adapterObj.mThumbIds[position] = idNo;
+                }
+            }
+        }
+        else{
+            //nothing
+        }
+        grid = (GridView) getActivity().findViewById(R.id.valueGrid);
+        grid.setAdapter(adapterObj);
     }
 
     private StringBuilder showDate(int year, int month, int day) {
