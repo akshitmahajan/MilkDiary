@@ -361,33 +361,6 @@ public class DiaryFragment extends Fragment {
         grid.setAdapter(adapterObj);
     }
 
-    /*public void setView(ImageAdapter adapterObj){
-        //ImageAdapter adapterObj = new ImageAdapter(context);
-
-        reports = FileOperationsImpl.readFromFile(context, Constants.REPORTS_FILE);
-
-        if((reports!=null) && (reports.size()!=0)){
-            for (String str : reports) {
-
-                String[] data = str.split(",");
-                //split with . & form the image name
-                String[] image_name = data[2].split("\\.");
-
-                if (data[0].equals(dateView.getText().toString())) {
-                    String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
-                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
-                    int position = getPosition(data[2], data[1]);
-                    adapterObj.mThumbIds[position] = idNo;
-                }
-            }
-        }
-        else{
-            //nothing
-        }
-        grid = (GridView) getActivity().findViewById(R.id.valueGrid);
-        grid.setAdapter(adapterObj);
-    }*/
-
     private StringBuilder showDate(int year, int month, int day) {
         StringBuilder date = new StringBuilder().append(day).append("/").
                 append(month).append("/").append(year);
@@ -409,34 +382,4 @@ public class DiaryFragment extends Fragment {
         }
         return position;
     }
-
-    /*public ArrayList<String> readFromFile(String FILE_NAME) {
-
-        ArrayList<String> listfromFile = new ArrayList<String>();
-        FileInputStream fileIn = null;
-        InputStreamReader InputRead = null;
-        BufferedReader br = null;
-
-        try {
-
-            fileIn = context.openFileInput(FILE_NAME);
-            String sCurrentLine;
-
-            br = new BufferedReader(new InputStreamReader(fileIn));
-            while ((sCurrentLine = br.readLine()) != null) {
-                listfromFile.add(sCurrentLine);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (br != null) br.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        return listfromFile;
-    }*/
 }
