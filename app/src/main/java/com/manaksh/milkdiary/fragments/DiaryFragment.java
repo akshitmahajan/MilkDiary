@@ -26,6 +26,7 @@ import com.manaksh.milkdiary.model.DailyData;
 import com.manaksh.milkdiary.model.ItemType;
 import com.manaksh.milkdiary.model.TransactionType;
 import com.manaksh.milkdiary.utils.Constants;
+import com.manaksh.milkdiary.utils.FileOperationsImpl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -66,6 +67,9 @@ public class DiaryFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
             ls_databean.clear();
+            ImageAdapter adapterObj = new ImageAdapter(context);
+            grid = (GridView) rootView.findViewById(R.id.valueGrid);
+            grid.setAdapter(adapterObj);
             // arg1 = year
             // arg2 = month
             // arg3 = day
@@ -85,7 +89,7 @@ public class DiaryFragment extends Fragment {
         //this.context = getActivity().getApplicationContext();
         this.rootView = rootView;
         //READ TAGS FILE and load the #tags
-        ArrayList<String> tagList = readFromFile(Constants.TAGS_FILE);
+        ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
 
         if (tagList == null) {
             tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
@@ -104,7 +108,7 @@ public class DiaryFragment extends Fragment {
         day = calendar.get(Calendar.DAY_OF_MONTH);
         _thisDay = showDate(year, month + 1, day);
 
-        reports = readFromFile(Constants.REPORTS_FILE);
+        reports = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.REPORTS_FILE);
         final ImageAdapter adapterObj = new ImageAdapter(context);
         //adapterObj = loadAdapter(reports, dateView, adapterObj);
 
@@ -224,7 +228,7 @@ public class DiaryFragment extends Fragment {
                                 for (int i = 0; i < tags.length; i++) {
                                     allTags = allTags + tags[i] + ",";
                                 }
-                                writeToFile(allTags);
+                                FileOperationsImpl.writeToFile(context, allTags);
                                 //Set color of the tag
                                 String colorHex = "";
 
@@ -261,7 +265,7 @@ public class DiaryFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                boolean _result = writeToFile(ls_databean);
+                boolean _result = FileOperationsImpl.writeToFile(context, ls_databean);
 
                 if (_result) {
                     Toast.makeText(context, Constants.FILE_SAVE_SUCCESS, Toast.LENGTH_SHORT).show();
@@ -333,7 +337,7 @@ public class DiaryFragment extends Fragment {
     public void setView(){
         ImageAdapter adapterObj = new ImageAdapter(context);
 
-        reports = readFromFile(Constants.REPORTS_FILE);
+        reports = FileOperationsImpl.readFromFile(context, Constants.REPORTS_FILE);
 
         if((reports!=null) && (reports.size()!=0)){
             for (String str : reports) {
@@ -357,6 +361,33 @@ public class DiaryFragment extends Fragment {
         grid.setAdapter(adapterObj);
     }
 
+    /*public void setView(ImageAdapter adapterObj){
+        //ImageAdapter adapterObj = new ImageAdapter(context);
+
+        reports = FileOperationsImpl.readFromFile(context, Constants.REPORTS_FILE);
+
+        if((reports!=null) && (reports.size()!=0)){
+            for (String str : reports) {
+
+                String[] data = str.split(",");
+                //split with . & form the image name
+                String[] image_name = data[2].split("\\.");
+
+                if (data[0].equals(dateView.getText().toString())) {
+                    String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                    int position = getPosition(data[2], data[1]);
+                    adapterObj.mThumbIds[position] = idNo;
+                }
+            }
+        }
+        else{
+            //nothing
+        }
+        grid = (GridView) getActivity().findViewById(R.id.valueGrid);
+        grid.setAdapter(adapterObj);
+    }*/
+
     private StringBuilder showDate(int year, int month, int day) {
         StringBuilder date = new StringBuilder().append(day).append("/").
                 append(month).append("/").append(year);
@@ -379,64 +410,7 @@ public class DiaryFragment extends Fragment {
         return position;
     }
 
-    public void writeToFile(String txt) {
-        Toast.makeText(context, txt,
-                Toast.LENGTH_SHORT).show();
-
-        try {
-            FileOutputStream fileout = context.openFileOutput(Constants.TAGS_FILE, context.MODE_PRIVATE);
-            BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(fileout));
-            //OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-            //comma , split string tags
-            String[] tags = txt.split(",");
-            for (String tag : tags) {
-                outputWriter.write(tag);
-                outputWriter.newLine();
-            }
-            outputWriter.close();
-
-            Toast.makeText(context, "Tags saved successfully!",
-                    Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean writeToFile(List<DailyData> dailyDataList) {
-
-        try {
-            FileOutputStream fileout = context.openFileOutput(Constants.REPORTS_FILE, context.MODE_APPEND);
-            BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(fileout));
-            //OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-
-            if (dailyDataList == null) {
-                return false;
-            } else {
-                for (DailyData data : dailyDataList) {
-                    String txt = "";
-                    if (data.getDate().equals("") || data.getType() == null || data.getQuantity() == 0 || data.getTransactionType() == null) {
-                        return false;
-                    } else {
-                        txt = data.getDate() + "," + data.getType() + "," + data.getQuantity() + "," + data.getTransactionType();
-                        outputWriter.write(txt);
-                        outputWriter.newLine();
-                    }
-                }
-                outputWriter.close();
-                return true;
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public ArrayList<String> readFromFile(String FILE_NAME) {
+    /*public ArrayList<String> readFromFile(String FILE_NAME) {
 
         ArrayList<String> listfromFile = new ArrayList<String>();
         FileInputStream fileIn = null;
@@ -464,5 +438,5 @@ public class DiaryFragment extends Fragment {
         }
 
         return listfromFile;
-    }
+    }*/
 }

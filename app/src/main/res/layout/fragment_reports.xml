@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.manaksh.milkdiary.fragments.ReportsFragment"
-    android:background="@color/darkgreen">
+    android:background="@color/transparent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+    <Spinner
+        android:id="@+id/months_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center"
+        android:nestedScrollingEnabled="false"
+        android:spinnerMode="dropdown" />
 </FrameLayout>
