@@ -121,7 +121,6 @@ public class ReportsFragment extends Fragment {
                 showToast("Month: unselected");
             }
         });
-
         return rootView;
     }
 
