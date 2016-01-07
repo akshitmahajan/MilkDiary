@@ -1,5 +1,6 @@
 package com.manaksh.milkdiary.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,9 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.manaksh.milkdiary.adapter.ImageAdapter;
+import com.manaksh.milkdiary.adapter.ReportsAdapter;
 import com.manaksh.milkdiary.model.DailyData;
 import com.manaksh.milkdiary.model.ItemType;
 import com.manaksh.milkdiary.model.TransactionType;
@@ -28,20 +32,43 @@ import static android.R.layout.simple_spinner_item;
 public class ReportsFragment extends Fragment {
 
     Spinner spinner = null;
-
+    Context context = null;
+    GridView colorGrid, tagGrid = null;
     HashMap<String, Double> hitCount = new HashMap<String, Double>();
     HashMap<String, Double> missCount = new HashMap<String, Double>();
 
     ArrayList<String> reports = new ArrayList<String>();
-
+    String[] reportTags = new String[5];
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
+        this.context = getActivity().getBaseContext();
+
+        ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
+
+        if (tagList == null) {
+            reportTags = new String[]{"", "#tag1", "#tag2", "#tag3", "tag4"};
+        } else {
+            reportTags[0]="";
+            int i = 1;
+            for (String str : tagList) {
+                reportTags[i] = str;
+                i++;
+            }
+        }
+
+        tagGrid = (GridView) rootView.findViewById(R.id.tagGrid);
+        ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(context,
+                android.R.layout.simple_list_item_1, reportTags);
+        tagGrid.setAdapter(tagAdapter);
+
+        final ReportsAdapter adapterObj = new ReportsAdapter(context);
+        colorGrid = (GridView) rootView.findViewById(R.id.colorGrid);
+        colorGrid.setAdapter(adapterObj);
 
         Calendar cal  = Calendar.getInstance();
-
         List<String> spinnerArray =  new ArrayList<String>();
         spinnerArray.add("-Select-");
         for(int i=0; i<12; i++){

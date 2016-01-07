@@ -28,14 +28,6 @@ import com.manaksh.milkdiary.model.TransactionType;
 import com.manaksh.milkdiary.utils.Constants;
 import com.manaksh.milkdiary.utils.FileOperationsImpl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
