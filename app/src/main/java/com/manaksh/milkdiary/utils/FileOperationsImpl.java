@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by akshmaha on 1/3/2016.
@@ -75,17 +77,20 @@ public class FileOperationsImpl {
         }
     }
 
-    public static boolean writeToFile(Context context, List<DailyData> dailyDataList) {
+    public static boolean writeToFile(Context context, HashMap<Integer, DailyData> dailyDataMap) {
 
         try {
             FileOutputStream fileout = context.openFileOutput(Constants.REPORTS_FILE, context.MODE_APPEND);
             BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(fileout));
             //OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 
-            if (dailyDataList == null) {
+            if (dailyDataMap == null) {
                 return false;
             } else {
-                for (DailyData data : dailyDataList) {
+
+                for(Map.Entry map : dailyDataMap.entrySet()){
+                    DailyData data = (DailyData) map.getValue();
+
                     String txt = "";
                     if (data.getDate().equals("") || data.getType() == null || data.getQuantity() == 0 || data.getTransactionType() == null) {
                         return false;
@@ -95,6 +100,17 @@ public class FileOperationsImpl {
                         outputWriter.newLine();
                     }
                 }
+
+                /*for (DailyData data : dailyDataList) {
+                    String txt = "";
+                    if (data.getDate().equals("") || data.getType() == null || data.getQuantity() == 0 || data.getTransactionType() == null) {
+                        return false;
+                    } else {
+                        txt = data.getDate() + "," + data.getType() + "," + data.getQuantity() + "," + data.getTransactionType();
+                        outputWriter.write(txt);
+                        outputWriter.newLine();
+                    }
+                }*/
                 outputWriter.close();
                 return true;
             }

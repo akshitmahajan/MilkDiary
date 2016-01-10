@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import manaksh.com.milkdiary.R;
@@ -43,7 +44,8 @@ public class DiaryFragment extends Fragment {
     static String[] tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
     Context context = null;
     GridView grid, gridTag = null;
-    List<DailyData> ls_databean = new ArrayList<DailyData>();
+    HashMap<Integer, DailyData> ls_databean = new HashMap<Integer, DailyData>();
+    //List<DailyData> ls_databean = new ArrayList<DailyData>();
     Button btn_Save = null;
     ArrayList<String> reports = new ArrayList<String>();
     StringBuilder _thisDay = null;
@@ -174,7 +176,17 @@ public class DiaryFragment extends Fragment {
                             dailyData.setTransactionType(TransactionType.steady);
                             break;
                     }
-                    ls_databean.add(dailyData);
+                    //ls_databean.add(dailyData);
+                    if(ls_databean.containsKey(position)){
+                        //update
+                        //DailyData d = ls_databean.get(position);
+                        ls_databean.remove(position);
+                        ls_databean.put(position, dailyData);
+                        //d=dailyData;
+                    }
+                    else{
+                        ls_databean.put(position, dailyData);
+                    }
                 }
             }
         });
@@ -265,7 +277,6 @@ public class DiaryFragment extends Fragment {
                     Toast.makeText(context, Constants.FILE_SAVE_FAILURE, Toast.LENGTH_SHORT).show();
                 }
             }
-
         });
 
         dateView.setOnClickListener(new View.OnClickListener() {

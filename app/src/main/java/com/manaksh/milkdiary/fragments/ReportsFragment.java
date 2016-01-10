@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.manaksh.milkdiary.adapter.ImageAdapter;
@@ -19,6 +21,8 @@ import com.manaksh.milkdiary.model.ItemType;
 import com.manaksh.milkdiary.model.TransactionType;
 import com.manaksh.milkdiary.utils.Constants;
 import com.manaksh.milkdiary.utils.FileOperationsImpl;
+
+import org.w3c.dom.Text;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -36,14 +40,18 @@ public class ReportsFragment extends Fragment {
     GridView colorGrid, tagGrid = null;
     HashMap<String, Double> hitCount = new HashMap<String, Double>();
     HashMap<String, Double> missCount = new HashMap<String, Double>();
+    TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8,tv10,tv11 = null;
+    EditText et1 = null;
 
     ArrayList<String> reports = new ArrayList<String>();
     String[] reportTags = new String[5];
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
+        //View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
+        final View rootView = inflater.inflate(R.layout.tablelayer, container, false);
         this.context = getActivity().getBaseContext();
 
         ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
@@ -64,13 +72,15 @@ public class ReportsFragment extends Fragment {
                 android.R.layout.simple_list_item_1, reportTags);
         tagGrid.setAdapter(tagAdapter);
 
-        final ReportsAdapter adapterObj = new ReportsAdapter(context);
+        /*final ReportsAdapter adapterObj = new ReportsAdapter(context);
         colorGrid = (GridView) rootView.findViewById(R.id.colorGrid);
-        colorGrid.setAdapter(adapterObj);
+        colorGrid.setAdapter(adapterObj);*/
 
         Calendar cal  = Calendar.getInstance();
         List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("-Select-");
+        //spinnerArray.add("-Select-");
+
+        //Adding last 12 months exclusing current month
         for(int i=0; i<12; i++){
             cal.add(Calendar.MONTH, -1);
             Integer year = cal.get(Calendar.YEAR);
@@ -88,6 +98,10 @@ public class ReportsFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                hitCount.clear();
+                missCount.clear();
+
                 String selected = spinner.getSelectedItem().toString();
                 String _splitSelected[] = selected.split(" ");
                 String month = _splitSelected[0];
@@ -107,6 +121,7 @@ public class ReportsFragment extends Fragment {
                         calc.setTime(date);
                         _monthSelected = calc.get(Calendar.MONTH);
                         _monthSelected = _monthSelected+1;
+
                     }catch (ParseException e){
                         e.printStackTrace();
                     }
@@ -136,11 +151,36 @@ public class ReportsFragment extends Fragment {
                         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>Reports are empty!");
                     }
                 }
-                System.out.println("***Hit Info***");
+                /*System.out.println("***Hit Info***");
                 displayInfo(hitCount);
                 System.out.println("***Miss Info***");
-                displayInfo(missCount);
+                displayInfo(missCount);*/
 
+                //populate row1 -> hit data
+                tv1 = (TextView) rootView.findViewById(R.id.tv1);
+                tv1.setText(hitCount.get("ORANGE")!= null? hitCount.get("ORANGE").toString():"0");
+
+                tv2 = (TextView) rootView.findViewById(R.id.tv2);
+                tv2.setText(hitCount.get("BLUE")!= null? hitCount.get("BLUE").toString():"0");
+
+                tv3 = (TextView) rootView.findViewById(R.id.tv3);
+                tv3.setText(hitCount.get("YELLOW")!= null? hitCount.get("YELLOW").toString():"0");
+
+                tv4 = (TextView) rootView.findViewById(R.id.tv4);
+                tv4.setText(hitCount.get("BLACK")!= null? hitCount.get("BLACK").toString():"0");
+
+                //populate row -> miss data
+                tv5 = (TextView) rootView.findViewById(R.id.tv5);
+                tv5.setText(missCount.get("ORANGE")!= null? missCount.get("ORANGE").toString():"0");
+
+                tv6 = (TextView) rootView.findViewById(R.id.tv6);
+                tv6.setText(missCount.get("BLUE")!= null? missCount.get("BLUE").toString():"0");
+
+                tv7 = (TextView) rootView.findViewById(R.id.tv7);
+                tv7.setText(missCount.get("YELLOW")!= null? missCount.get("YELLOW").toString():"0");
+
+                tv8 = (TextView) rootView.findViewById(R.id.tv8);
+                tv8.setText(missCount.get("BLACK")!= null? missCount.get("BLACK").toString():"0");
             }
 
             @Override
@@ -148,6 +188,11 @@ public class ReportsFragment extends Fragment {
                 showToast("Month: unselected");
             }
         });
+
+        tv10 = (TextView) rootView.findViewById(R.id.tv10);
+
+        //Give TableLayout 2 & 3 onClick Listener
+
         return rootView;
     }
 
