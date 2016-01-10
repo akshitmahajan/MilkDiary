@@ -3,6 +3,8 @@ package com.manaksh.milkdiary.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,7 @@ public class ReportsFragment extends Fragment {
     GridView colorGrid, tagGrid = null;
     HashMap<String, Double> hitCount = new HashMap<String, Double>();
     HashMap<String, Double> missCount = new HashMap<String, Double>();
-    TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8,tv10,tv11 = null;
+    TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8,tv10,tv11,tv13 = null;
     EditText et1 = null;
 
     ArrayList<String> reports = new ArrayList<String>();
@@ -53,6 +55,17 @@ public class ReportsFragment extends Fragment {
         //View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
         final View rootView = inflater.inflate(R.layout.tablelayer, container, false);
         this.context = getActivity().getBaseContext();
+
+        tv1 = (TextView) rootView.findViewById(R.id.tv1);
+        tv2 = (TextView) rootView.findViewById(R.id.tv2);
+        tv3 = (TextView) rootView.findViewById(R.id.tv3);
+        tv4 = (TextView) rootView.findViewById(R.id.tv4);
+        tv5 = (TextView) rootView.findViewById(R.id.tv5);
+        tv6 = (TextView) rootView.findViewById(R.id.tv6);
+        tv7 = (TextView) rootView.findViewById(R.id.tv7);
+        tv8 = (TextView) rootView.findViewById(R.id.tv8);
+        et1 = (EditText) rootView.findViewById(R.id.et1);
+        tv13 = (TextView) rootView.findViewById(R.id.tv13);
 
         ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
 
@@ -157,29 +170,16 @@ public class ReportsFragment extends Fragment {
                 displayInfo(missCount);*/
 
                 //populate row1 -> hit data
-                tv1 = (TextView) rootView.findViewById(R.id.tv1);
                 tv1.setText(hitCount.get("ORANGE")!= null? hitCount.get("ORANGE").toString():"0");
-
-                tv2 = (TextView) rootView.findViewById(R.id.tv2);
                 tv2.setText(hitCount.get("BLUE")!= null? hitCount.get("BLUE").toString():"0");
-
-                tv3 = (TextView) rootView.findViewById(R.id.tv3);
                 tv3.setText(hitCount.get("YELLOW")!= null? hitCount.get("YELLOW").toString():"0");
-
-                tv4 = (TextView) rootView.findViewById(R.id.tv4);
                 tv4.setText(hitCount.get("BLACK")!= null? hitCount.get("BLACK").toString():"0");
 
                 //populate row -> miss data
-                tv5 = (TextView) rootView.findViewById(R.id.tv5);
+
                 tv5.setText(missCount.get("ORANGE")!= null? missCount.get("ORANGE").toString():"0");
-
-                tv6 = (TextView) rootView.findViewById(R.id.tv6);
                 tv6.setText(missCount.get("BLUE")!= null? missCount.get("BLUE").toString():"0");
-
-                tv7 = (TextView) rootView.findViewById(R.id.tv7);
                 tv7.setText(missCount.get("YELLOW")!= null? missCount.get("YELLOW").toString():"0");
-
-                tv8 = (TextView) rootView.findViewById(R.id.tv8);
                 tv8.setText(missCount.get("BLACK")!= null? missCount.get("BLACK").toString():"0");
             }
 
@@ -190,9 +190,164 @@ public class ReportsFragment extends Fragment {
         });
 
         tv10 = (TextView) rootView.findViewById(R.id.tv10);
-
         //Give TableLayout 2 & 3 onClick Listener
 
+        if(tv1!=null){
+            tv1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                            tv1.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                            tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv1.getText().toString());
+                }
+            });
+        }
+
+        if(tv2!=null){
+            tv2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                            tv2.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                            tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+                    tv10.setText(tv2.getText().toString());
+                }
+            });
+        }
+
+        if(tv3!=null){
+            tv3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                            tv3.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                            tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv3.getText().toString());
+                }
+            });
+        }
+
+        if(tv4!=null){
+            tv4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                            tv4.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                            tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv4.getText().toString());
+                }
+            });
+        }
+
+        if(tv5!=null){
+            tv5.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                            tv5.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                            tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv5.getText().toString());
+                }
+            });
+        }
+
+        if(tv6!=null){
+            tv6.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tv6.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                    tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv6.getText().toString());
+                }
+            });
+        }
+
+        if(tv7!=null){
+            tv7.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tv7.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                    tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv7.getText().toString());
+                }
+            });
+        }
+
+        if(tv8!=null){
+            tv8.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tv8.setBackgroundColor(getResources().getColor(R.color.darkgreen));
+                    tv1.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv2.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv3.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv4.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv6.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    tv10.setText(tv8.getText().toString());
+                }
+            });
+        }
+
+        et1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                tv13.setText(total.toString());
+            }
+        });
         return rootView;
     }
 
