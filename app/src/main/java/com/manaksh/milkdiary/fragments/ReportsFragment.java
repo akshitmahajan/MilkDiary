@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -66,7 +68,6 @@ public class ReportsFragment extends Fragment {
         tv8 = (TextView) rootView.findViewById(R.id.tv8);
         et1 = (EditText) rootView.findViewById(R.id.et1);
         tv13 = (TextView) rootView.findViewById(R.id.tv13);
-
         ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
 
         if (tagList == null) {
@@ -205,6 +206,8 @@ public class ReportsFragment extends Fragment {
                             tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
                             tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv1.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -224,6 +227,8 @@ public class ReportsFragment extends Fragment {
                             tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
 
                     tv10.setText(tv2.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -241,6 +246,8 @@ public class ReportsFragment extends Fragment {
                             tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
                             tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv3.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -259,6 +266,8 @@ public class ReportsFragment extends Fragment {
                             tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
                             tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv4.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -276,6 +285,8 @@ public class ReportsFragment extends Fragment {
                             tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
                             tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv5.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -293,6 +304,8 @@ public class ReportsFragment extends Fragment {
                     tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv6.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -310,6 +323,8 @@ public class ReportsFragment extends Fragment {
                     tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv8.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv7.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
@@ -327,9 +342,24 @@ public class ReportsFragment extends Fragment {
                     tv7.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv5.setBackgroundColor(getResources().getColor(R.color.transparent));
                     tv10.setText(tv8.getText().toString());
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
                 }
             });
         }
+
+        et1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                et1.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(et1, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
+            }
+        });
 
         et1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -344,8 +374,13 @@ public class ReportsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
-                tv13.setText(total.toString());
+                if(et1.getText().toString().equals("") || et1.getText().toString()==null){
+                    tv13.setText("0");
+                }
+                else{
+                    Double total = Double.parseDouble(tv10.getText().toString()) * Double.parseDouble(et1.getText().toString());
+                    tv13.setText(total.toString());
+                }
             }
         });
         return rootView;
