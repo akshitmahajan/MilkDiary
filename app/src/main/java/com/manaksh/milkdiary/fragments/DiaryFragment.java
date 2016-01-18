@@ -94,6 +94,7 @@ public class DiaryFragment extends Fragment {
                 i++;
             }
         }
+
         //Initializes the calendarview
         dateView = (TextView) rootView.findViewById(R.id.dateView);
         calendar = Calendar.getInstance();

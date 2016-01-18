@@ -7,6 +7,7 @@ import com.manaksh.milkdiary.model.DailyData;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,15 +32,24 @@ public class FileOperationsImpl {
         BufferedReader br = null;
 
         try {
-
-            fileIn = context.openFileInput(FILE_NAME);
-            String sCurrentLine;
-
-            br = new BufferedReader(new InputStreamReader(fileIn));
-            while ((sCurrentLine = br.readLine()) != null) {
-                listfromFile.add(sCurrentLine);
+            /*File f = new File(FILE_NAME);
+            if(!f.exists()){
+                return null;
             }
+            else{*/
+                File file = context.getFileStreamPath(FILE_NAME);
+                if(file==null || !file.exists()){
+                    return null;
+                }
+                else{
+                    fileIn = context.openFileInput(FILE_NAME);
+                    String sCurrentLine;
 
+                    br = new BufferedReader(new InputStreamReader(fileIn));
+                    while ((sCurrentLine = br.readLine()) != null) {
+                        listfromFile.add(sCurrentLine);
+                    }
+                }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

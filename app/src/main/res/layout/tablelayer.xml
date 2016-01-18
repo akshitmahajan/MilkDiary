@@ -33,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center"
                 android:nestedScrollingEnabled="false"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:paddingLeft="@dimen/reports_fragment_horizonal_margin" />
 
         </TableRow>
     </TableLayout>
