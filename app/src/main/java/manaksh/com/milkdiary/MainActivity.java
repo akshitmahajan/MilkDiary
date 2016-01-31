@@ -82,6 +82,9 @@ public class MainActivity extends FragmentActivity implements
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         // on tab selected
         // show respected fragment view
+        if(tab.getPosition()==1){
+
+        }
         viewPager.setCurrentItem(tab.getPosition());
     }
 

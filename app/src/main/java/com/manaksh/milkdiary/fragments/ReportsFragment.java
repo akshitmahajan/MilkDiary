@@ -49,12 +49,12 @@ public class ReportsFragment extends Fragment {
 
     ArrayList<String> reports = new ArrayList<String>();
     String[] reportTags = new String[5];
-
+    public boolean created=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>> is Resumed ? : " + isResumed());
+        created=true;
         //View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
         final View rootView = inflater.inflate(R.layout.tablelayer, container, false);
         this.context = getActivity().getBaseContext();
@@ -69,6 +69,8 @@ public class ReportsFragment extends Fragment {
         tv8 = (TextView) rootView.findViewById(R.id.tv8);
         et1 = (EditText) rootView.findViewById(R.id.et1);
         tv13 = (TextView) rootView.findViewById(R.id.tv13);
+
+
         ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
 
         if (tagList == null) {
@@ -81,7 +83,6 @@ public class ReportsFragment extends Fragment {
                 i++;
             }
         }
-
         tagGrid = (GridView) rootView.findViewById(R.id.tagGrid);
         ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(context,
                 android.R.layout.simple_list_item_1, reportTags);

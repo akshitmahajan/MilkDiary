@@ -46,7 +46,7 @@ public class DiaryFragment extends Fragment {
     GridView grid, gridTag = null;
     HashMap<Integer, DailyData> ls_databean = new HashMap<Integer, DailyData>();
     //List<DailyData> ls_databean = new ArrayList<DailyData>();
-    Button btn_Save = null;
+    ImageButton btn_Save = null;
     ArrayList<String> reports = new ArrayList<String>();
     StringBuilder _thisDay = null;
     ImageButton arrowLeft, arrowRight = null;
@@ -118,7 +118,7 @@ public class DiaryFragment extends Fragment {
 
                 if (data[0].equals(dateView.getText().toString())) {
 
-                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "mipmap", context.getPackageName());
                     int position = getPosition(data[2], data[1]);
                     adapterObj.mThumbIds[position] = idNo;
                 }
@@ -157,21 +157,21 @@ public class DiaryFragment extends Fragment {
                     switch (splitName[3]) {
                         //DEFAULT->HIT
                         case Constants.STEADY:
-                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_hit", "drawable", context.getPackageName());
+                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_hit", "mipmap", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
                             dailyData.setTransactionType(TransactionType.hit);
                             break;
                         //HIT->MISS
                         case Constants.HIT:
-                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_miss", "drawable", context.getPackageName());
+                            idNo = getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_miss", "mipmap", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
                             dailyData.setTransactionType(TransactionType.miss);
                             break;
                         //MISS->DEFAULT
                         case Constants.MISS:
-                            idNo = context.getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_steady", "drawable", context.getPackageName());
+                            idNo = context.getResources().getIdentifier("_" + splitName[1] + "_" + splitName[2] + "_steady", "mipmap", context.getPackageName());
                             imageView.setImageResource(idNo);
                             adapterObj.mThumbIds[position] = idNo;
                             dailyData.setTransactionType(TransactionType.steady);
@@ -181,8 +181,14 @@ public class DiaryFragment extends Fragment {
                     if(ls_databean.containsKey(position)){
                         //update
                         //DailyData d = ls_databean.get(position);
-                        ls_databean.remove(position);
-                        ls_databean.put(position, dailyData);
+
+                        if(ls_databean.get(position).getTransactionType().equals(dailyData.getTransactionType())){
+                            //no change necessary
+                        }
+                        else{
+                            ls_databean.remove(position);
+                            ls_databean.put(position, dailyData);
+                        }
                         //d=dailyData;
                     }
                     else{
@@ -234,8 +240,9 @@ public class DiaryFragment extends Fragment {
                                     allTags = allTags + tags[i] + ",";
                                 }
                                 FileOperationsImpl.writeToFile(context, allTags);
+
                                 //Set color of the tag
-                                String colorHex = "";
+                                /*String colorHex = "";
 
                                 if (position == 0) {
                                     colorHex = "#ff803e";
@@ -243,11 +250,10 @@ public class DiaryFragment extends Fragment {
                                     colorHex = "#1a9def";
                                 } else if (position == 2) {
                                     colorHex = "#faff00";
-
                                 } else if (position == 3) {
                                     colorHex = "BLACK";
                                 }
-                                ((TextView) v1).setTextColor(Color.parseColor(colorHex));
+                                ((TextView) v1).setTextColor(Color.parseColor(colorHex));*/
                             }
                         })
                         .setNegativeButton("Cancel",
@@ -265,18 +271,25 @@ public class DiaryFragment extends Fragment {
         });
 
         //Save Button
-        btn_Save = (Button) rootView.findViewById(R.id.saveBtn);
+        btn_Save = (ImageButton) rootView.findViewById(R.id.saveBtn);
         btn_Save.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                boolean _result = FileOperationsImpl.writeToFile(context, ls_databean);
-
-                if (_result) {
-                    Toast.makeText(context, Constants.FILE_SAVE_SUCCESS, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, Constants.FILE_SAVE_FAILURE, Toast.LENGTH_SHORT).show();
+                if(ls_databean.size()==0){
+                    Toast.makeText(context, Constants.NO_CHANGE, Toast.LENGTH_SHORT).show();
                 }
+                else{
+                    boolean _result = FileOperationsImpl.writeToFile(context, ls_databean);
+
+                    if (_result) {
+                        Toast.makeText(context, Constants.FILE_SAVE_SUCCESS, Toast.LENGTH_SHORT).show();
+                        ls_databean.clear();
+                    } else {
+                        Toast.makeText(context, Constants.FILE_SAVE_FAILURE, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         });
 
@@ -352,7 +365,7 @@ public class DiaryFragment extends Fragment {
 
                 if (data[0].equals(dateView.getText().toString())) {
                     String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
-                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "drawable", context.getPackageName());
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "mipmap", context.getPackageName());
                     int position = getPosition(data[2], data[1]);
                     adapterObj.mThumbIds[position] = idNo;
                 }

@@ -24,8 +24,9 @@ public final class Constants {
     public static final String color_Black = "BLACK";
     public static final String TAGS_FILE = "milkdiary_tags.txt";
     public static final String REPORTS_FILE = "milkdiary_report.txt";
-    public static final String FILE_SAVE_SUCCESS = "You Just Saved The Earth!!!";
-    public static final String FILE_SAVE_FAILURE = "GO F**K Yourself!!!";
+    public static final String FILE_SAVE_SUCCESS = "Diary Saved!";
+    public static final String FILE_SAVE_FAILURE = "Operation Failed!";
+    public static final String NO_CHANGE = "Nothing to Save!";
     public static Map<String, Integer> Type1Map;
     public static Map<String, Integer> Type2Map;
     public static Map<String, Integer> Type3Map;

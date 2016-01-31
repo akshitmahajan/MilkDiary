@@ -34,7 +34,8 @@
                 android:gravity="center_vertical|center"
                 android:nestedScrollingEnabled="false"
                 android:spinnerMode="dropdown"
-                android:paddingLeft="@dimen/reports_fragment_horizonal_margin" />
+                android:paddingLeft="@dimen/reports_fragment_horizonal_margin"
+                android:layout_marginLeft="30dp" />
 
         </TableRow>
     </TableLayout>
@@ -111,7 +112,7 @@
             <ImageView
                 android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@drawable/check"/>
+                android:src="@mipmap/check"/>
 
                 <TextView
                     android:id="@+id/tv1"

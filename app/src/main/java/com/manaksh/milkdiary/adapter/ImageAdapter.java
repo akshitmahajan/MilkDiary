@@ -15,18 +15,18 @@ import manaksh.com.milkdiary.R;
 public class ImageAdapter extends BaseAdapter {
     // references to our images
     public Integer[] mThumbIds = {
-            R.drawable.orange, R.drawable.blue,
-            R.drawable.yellow, R.drawable.milkman,
-            R.drawable._1_0_steady, R.drawable._1_0_steady,
-            R.drawable._1_0_steady, R.drawable._1_0_steady,
-            R.drawable._1_5_steady, R.drawable._1_5_steady,
-            R.drawable._1_5_steady, R.drawable._1_5_steady,
-            R.drawable._2_0_steady, R.drawable._2_0_steady,
-            R.drawable._2_0_steady, R.drawable._2_0_steady,
-            R.drawable._2_5_steady, R.drawable._2_5_steady,
-            R.drawable._2_5_steady, R.drawable._2_5_steady,
-            R.drawable._3_0_steady, R.drawable._3_0_steady,
-            R.drawable._3_0_steady, R.drawable._3_0_steady
+            R.mipmap.orange, R.mipmap.blue,
+            R.mipmap.yellow, R.mipmap.milkman,
+            R.mipmap._1_0_steady, R.mipmap._1_0_steady,
+            R.mipmap._1_0_steady, R.mipmap._1_0_steady,
+            R.mipmap._1_5_steady, R.mipmap._1_5_steady,
+            R.mipmap._1_5_steady, R.mipmap._1_5_steady,
+            R.mipmap._2_0_steady, R.mipmap._2_0_steady,
+            R.mipmap._2_0_steady, R.mipmap._2_0_steady,
+            R.mipmap._2_5_steady, R.mipmap._2_5_steady,
+            R.mipmap._2_5_steady, R.mipmap._2_5_steady,
+            R.mipmap._3_0_steady, R.mipmap._3_0_steady,
+            R.mipmap._3_0_steady, R.mipmap._3_0_steady
     };
 
     // Map each state to its graphics.
@@ -55,9 +55,9 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(160, 160));
+            imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(10, 10, 10, 10);
+            imageView.setPadding(5,5,5,5);
         } else {
             imageView = (ImageView) convertView;
         }
