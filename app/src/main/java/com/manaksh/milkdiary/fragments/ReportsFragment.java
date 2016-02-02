@@ -8,8 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -18,26 +16,28 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.manaksh.milkdiary.adapter.ImageAdapter;
-import com.manaksh.milkdiary.adapter.ReportsAdapter;
-import com.manaksh.milkdiary.model.DailyData;
-import com.manaksh.milkdiary.model.ItemType;
 import com.manaksh.milkdiary.model.TransactionType;
 import com.manaksh.milkdiary.utils.Constants;
 import com.manaksh.milkdiary.utils.FileOperationsImpl;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import manaksh.com.milkdiary.R;
 
-import static android.R.layout.simple_spinner_item;
-
-public class ReportsFragment extends Fragment {
+/*
+This Class sets shows the reports view based on the selected Month by the user.
+ */
+public class ReportsFragment extends Fragment implements FragmentLifecycle {
 
     Spinner spinner = null;
     Context context = null;
@@ -46,15 +46,14 @@ public class ReportsFragment extends Fragment {
     HashMap<String, Double> missCount = new HashMap<String, Double>();
     TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8, tv10, tv11, tv13 = null;
     EditText et1 = null;
-
     ArrayList<String> reports = new ArrayList<String>();
     String[] reportTags = new String[5];
-    public boolean created=false;
+    String monthSelected = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        created=true;
         //View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
         final View rootView = inflater.inflate(R.layout.tablelayer, container, false);
         this.context = getActivity().getBaseContext();
@@ -69,7 +68,6 @@ public class ReportsFragment extends Fragment {
         tv8 = (TextView) rootView.findViewById(R.id.tv8);
         et1 = (EditText) rootView.findViewById(R.id.et1);
         tv13 = (TextView) rootView.findViewById(R.id.tv13);
-
 
         ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
 
@@ -88,15 +86,10 @@ public class ReportsFragment extends Fragment {
                 android.R.layout.simple_list_item_1, reportTags);
         tagGrid.setAdapter(tagAdapter);
 
-        /*final ReportsAdapter adapterObj = new ReportsAdapter(context);
-        colorGrid = (GridView) rootView.findViewById(R.id.colorGrid);
-        colorGrid.setAdapter(adapterObj);*/
-
         Calendar cal = Calendar.getInstance();
         List<String> spinnerArray = new ArrayList<String>();
-        //spinnerArray.add("-Select-");
 
-        //Adding last 12 months exclusing current month
+        //Adding last 12 months excluding current month
         for (int i = 0; i < 12; i++) {
             cal.add(Calendar.MONTH, -1);
             Integer year = cal.get(Calendar.YEAR);
@@ -119,70 +112,8 @@ public class ReportsFragment extends Fragment {
                 missCount.clear();
 
                 String selected = spinner.getSelectedItem().toString();
-                String _splitSelected[] = selected.split(" ");
-                String month = _splitSelected[0];
-                int _monthSelected = 0;
-
-                if (selected.equals("-Select-")) {
-                    //do nothing
-                } else {
-                    String _yearSelected = _splitSelected[1];
-
-                    //get the month in int format
-                    try {
-
-                        Date date = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(month);
-                        Calendar calc = Calendar.getInstance();
-                        calc.setTime(date);
-                        _monthSelected = calc.get(Calendar.MONTH);
-                        _monthSelected = _monthSelected + 1;
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    //read report and fetch the values for the selected month & year
-                    reports = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.REPORTS_FILE);
-
-                    if ((reports != null) && (reports.size() != 0)) {
-                        for (String report : reports) {
-
-                            // report : 4/1/2016,ORANGE,2.5,hit
-                            String[] _report = report.split(",");
-                            String[] date = _report[0].split("/");
-
-                            // Type : _report[1], Quantity : _report[2], Transaction_Type : _report[3]
-                            //check if fetched month matches the selected month
-                            if (Integer.parseInt(date[1]) == _monthSelected && date[2].equals(_yearSelected)) {
-                                //showToast("Data found for the selected month!");
-                                process(_report[1], _report[2], _report[3]);
-                            } else {
-                                //showToast("Data not found for the selected month!");
-                                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>Data not found for the selected month!");
-                            }
-                        }
-                    } else {
-                        showToast("Reports are empty!");
-                        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>Reports are empty!");
-                    }
-                }
-                /*System.out.println("***Hit Info***");
-                displayInfo(hitCount);
-                System.out.println("***Miss Info***");
-                displayInfo(missCount);*/
-
-                //populate row1 -> hit data
-                tv1.setText(hitCount.get("ORANGE") != null ? hitCount.get("ORANGE").toString() : "0");
-                tv2.setText(hitCount.get("BLUE") != null ? hitCount.get("BLUE").toString() : "0");
-                tv3.setText(hitCount.get("YELLOW") != null ? hitCount.get("YELLOW").toString() : "0");
-                tv4.setText(hitCount.get("BLACK") != null ? hitCount.get("BLACK").toString() : "0");
-
-                //populate row -> miss data
-
-                tv5.setText(missCount.get("ORANGE") != null ? missCount.get("ORANGE").toString() : "0");
-                tv6.setText(missCount.get("BLUE") != null ? missCount.get("BLUE").toString() : "0");
-                tv7.setText(missCount.get("YELLOW") != null ? missCount.get("YELLOW").toString() : "0");
-                tv8.setText(missCount.get("BLACK") != null ? missCount.get("BLACK").toString() : "0");
+                monthSelected = selected;
+                setData();
             }
 
             @Override
@@ -192,8 +123,8 @@ public class ReportsFragment extends Fragment {
         });
 
         tv10 = (TextView) rootView.findViewById(R.id.tv10);
-        //Give TableLayout 2 & 3 onClick Listener
 
+        //Give TableLayout 2 & 3 onClick Listener
         if (tv1 != null) {
             tv1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -357,19 +288,6 @@ public class ReportsFragment extends Fragment {
             });
         }
 
-        /*et1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                et1.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(et1, InputMethodManager.SHOW_IMPLICIT);
-                    }
-                });
-            }
-        });*/
-
         et1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -394,6 +312,36 @@ public class ReportsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onPauseFragment() {
+    }
+
+    @Override
+    public void onResumeFragment() {
+        ArrayList<String> tagList = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.TAGS_FILE);
+
+        if (tagList == null) {
+            reportTags = new String[]{"", "#tag1", "#tag2", "#tag3", "tag4"};
+        } else {
+            reportTags[0] = "";
+            int i = 1;
+            for (String str : tagList) {
+                reportTags[i] = str;
+                i++;
+            }
+        }
+        ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(context,
+                android.R.layout.simple_list_item_1, reportTags);
+        tagGrid.setAdapter(tagAdapter);
+        hitCount.clear();
+        missCount.clear();
+        setData();
+    }
+
+    /*
+    This method computes the net price of total milk received or missed
+    in the selected month for respective tag.
+     */
     public double computePrice(EditText et1) {
         Double price = null;
         if (et1.getText().toString().equals("") || et1.getText().toString() == null) {
@@ -404,6 +352,9 @@ public class ReportsFragment extends Fragment {
         return price;
     }
 
+    /*
+    This method process and compute Hit and Miss count. It initializes the HitMap and MissMap.
+     */
     public void process(String type, String Quantity, String transactionType) {
         double quantity = Double.parseDouble(Quantity);
 
@@ -424,14 +375,73 @@ public class ReportsFragment extends Fragment {
                 missCount.put(type, quantity);
             }
         } else {
-            System.out.println("Invalid Transaction Type");
         }
     }
 
+    /*
+    Sets Hit and Miss data in Reports Fragment
+     */
+    public void setData() {
+        String _splitSelected[] = monthSelected.split(" ");
+        String month = _splitSelected[0];
+        int _monthSelected = 0;
+
+        String _yearSelected = _splitSelected[1];
+
+        //get the month in int format
+        try {
+
+            Date date = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(month);
+            Calendar calc = Calendar.getInstance();
+            calc.setTime(date);
+            _monthSelected = calc.get(Calendar.MONTH);
+            _monthSelected = _monthSelected + 1;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        reports = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.REPORTS_FILE);
+
+        if ((reports != null) && (reports.size() != 0)) {
+            for (String report : reports) {
+
+                String[] _report = report.split(",");
+                String[] date = _report[0].split("/");
+
+                if (Integer.parseInt(date[1]) == _monthSelected && date[2].equals(_yearSelected)) {
+                    process(_report[1], _report[2], _report[3]);
+                } else {
+                }
+            }
+        } else {
+            showToast("Reports are empty!");
+        }
+
+        //populate row1 -> hit data
+        tv1.setText(hitCount.get("ORANGE") != null ? hitCount.get("ORANGE").toString() : "0");
+        tv2.setText(hitCount.get("BLUE") != null ? hitCount.get("BLUE").toString() : "0");
+        tv3.setText(hitCount.get("YELLOW") != null ? hitCount.get("YELLOW").toString() : "0");
+        tv4.setText(hitCount.get("BLACK") != null ? hitCount.get("BLACK").toString() : "0");
+
+        //populate row -> miss data
+
+        tv5.setText(missCount.get("ORANGE") != null ? missCount.get("ORANGE").toString() : "0");
+        tv6.setText(missCount.get("BLUE") != null ? missCount.get("BLUE").toString() : "0");
+        tv7.setText(missCount.get("YELLOW") != null ? missCount.get("YELLOW").toString() : "0");
+        tv8.setText(missCount.get("BLACK") != null ? missCount.get("BLACK").toString() : "0");
+    }
+
+    /*
+    Returns String month
+     */
     public String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month];
     }
 
+    /*
+    Displays Hit/Miss data in the log
+     */
     public void displayInfo(HashMap<String, Double> dataMap) {
         if (dataMap != null) {
             Iterator keys = dataMap.keySet().iterator();
@@ -443,15 +453,10 @@ public class ReportsFragment extends Fragment {
         }
     }
 
+    /*
+    Shows the toast message
+     */
     void showToast(CharSequence msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public void onResume() {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>Resumed");
-        super.onResume();
-    }
-
-
 }

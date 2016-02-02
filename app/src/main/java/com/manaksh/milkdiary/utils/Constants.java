@@ -70,12 +70,6 @@ public final class Constants {
 
     static {
         Map<String, Integer> tempMap = new HashMap<String, Integer>();
-        /*tempMap.put("_1_0_DEFAULT",5);
-        tempMap.put("_1_5_DEFAULT",9);
-        tempMap.put("_2_0_DEFAULT",13);
-        tempMap.put("_2_5_DEFAULT",17);
-        tempMap.put("_3_0_DEFAULT",21);*/
-
         tempMap.put("1.0", 5);
         tempMap.put("1.5", 9);
         tempMap.put("2.0", 13);

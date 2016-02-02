@@ -4,11 +4,10 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.widget.Toast;
 
 import com.manaksh.milkdiary.adapter.TabsPagerAdapter;
+import com.manaksh.milkdiary.fragments.FragmentLifecycle;
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -16,18 +15,45 @@ public class MainActivity extends FragmentActivity implements
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
-    // Tab titles
     private String[] tabs = {"Diary", "Reports"};
+    /**
+     * on swiping the viewpager make respective tab selected
+     */
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+
+        int currentPosition = 0;
+
+        @Override
+        public void onPageSelected(int position) {
+
+            actionBar.setSelectedNavigationItem(position);
+            FragmentLifecycle fragmentToHide = (FragmentLifecycle) mAdapter.getItem(currentPosition);
+            fragmentToHide.onPauseFragment();
+
+            FragmentLifecycle fragmentToShow = (FragmentLifecycle) mAdapter.getItem(position);
+            fragmentToShow.onResumeFragment();
+
+            currentPosition = position;
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Initilization
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         actionBar = getActionBar();
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
@@ -39,57 +65,20 @@ public class MainActivity extends FragmentActivity implements
                     .setTabListener(this));
         }
 
-        /**
-         * on swiping the viewpager make respective tab selected
-         * */
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                // on changing the page
-                // make respected tab selected
-                actionBar.setSelectedNavigationItem(position);
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-        });
-
-        android.app.FragmentManager fm = getFragmentManager();
-        fm.addOnBackStackChangedListener(new android.app.FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                Toast.makeText(getBaseContext(), "Press once again to exit!",
-                        Toast.LENGTH_SHORT).show();
-                if(getSupportFragmentManager().getBackStackEntryCount() == 0) finish();
-            }
-        });
+        viewPager.setOnPageChangeListener(pageChangeListener);
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-        //onResume functionality
-
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        // on tab selected
-        // show respected fragment view
-        if(tab.getPosition()==1){
-
-        }
+        // on tab selected, show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
-
 }

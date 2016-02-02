@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -35,11 +33,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import manaksh.com.milkdiary.R;
 
-public class DiaryFragment extends Fragment {
+public class DiaryFragment extends Fragment implements FragmentLifecycle {
 
     static String[] tags = new String[]{"#tag1", "#tag2", "#tag3", "#tag4"};
     Context context = null;
@@ -49,14 +46,9 @@ public class DiaryFragment extends Fragment {
     ImageButton btn_Save = null;
     ArrayList<String> reports = new ArrayList<String>();
     StringBuilder _thisDay = null;
-    ImageButton arrowLeft, arrowRight = null;
-    TextView calenderBtn = null;
-    View rootView = null;
-    private DatePicker datePicker = null;
-    private Calendar calendar = null;
-    private TextView dateView = null;
-    private int year, month, day = 0;
-
+    /*
+    Initializes the DataPicker
+     */
     private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
@@ -73,6 +65,13 @@ public class DiaryFragment extends Fragment {
             }
         }
     };
+    ImageButton arrowLeft, arrowRight = null;
+    TextView calenderBtn = null;
+    View rootView = null;
+    private DatePicker datePicker = null;
+    private Calendar calendar = null;
+    private TextView dateView = null;
+    private int year, month, day = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +93,6 @@ public class DiaryFragment extends Fragment {
                 i++;
             }
         }
-
         //Initializes the calendarview
         dateView = (TextView) rootView.findViewById(R.id.dateView);
         calendar = Calendar.getInstance();
@@ -133,13 +131,12 @@ public class DiaryFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View imgView, int position, long id) {
                 ImageView imageView = (ImageView) imgView;
                 String name = getResources().getResourceEntryName(mThumbs[position]);
-                //_1_0_DEFAULT
+                //_1_0_steady
                 String[] splitName = name.split("_");
                 int idNo = 0;
                 ItemType _type = Constants.PositionTypeMap.get(position);
 
                 if (position == 0 || position == 1 || position == 2 || position == 3) {
-                    //Do nothing
                 } else {
                     //Create a new object and set everything
                     DailyData dailyData = new DailyData();
@@ -178,20 +175,17 @@ public class DiaryFragment extends Fragment {
                             break;
                     }
                     //ls_databean.add(dailyData);
-                    if(ls_databean.containsKey(position)){
+                    if (ls_databean.containsKey(position)) {
                         //update
                         //DailyData d = ls_databean.get(position);
 
-                        if(ls_databean.get(position).getTransactionType().equals(dailyData.getTransactionType())){
-                            //no change necessary
-                        }
-                        else{
+                        if (ls_databean.get(position).getTransactionType().equals(dailyData.getTransactionType())) {
+                        } else {
                             ls_databean.remove(position);
                             ls_databean.put(position, dailyData);
                         }
                         //d=dailyData;
-                    }
-                    else{
+                    } else {
                         ls_databean.put(position, dailyData);
                     }
                 }
@@ -240,20 +234,6 @@ public class DiaryFragment extends Fragment {
                                     allTags = allTags + tags[i] + ",";
                                 }
                                 FileOperationsImpl.writeToFile(context, allTags);
-
-                                //Set color of the tag
-                                /*String colorHex = "";
-
-                                if (position == 0) {
-                                    colorHex = "#ff803e";
-                                } else if (position == 1) {
-                                    colorHex = "#1a9def";
-                                } else if (position == 2) {
-                                    colorHex = "#faff00";
-                                } else if (position == 3) {
-                                    colorHex = "BLACK";
-                                }
-                                ((TextView) v1).setTextColor(Color.parseColor(colorHex));*/
                             }
                         })
                         .setNegativeButton("Cancel",
@@ -276,10 +256,9 @@ public class DiaryFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                if(ls_databean.size()==0){
+                if (ls_databean.size() == 0) {
                     Toast.makeText(context, Constants.NO_CHANGE, Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     boolean _result = FileOperationsImpl.writeToFile(context, ls_databean);
 
                     if (_result) {
@@ -289,17 +268,14 @@ public class DiaryFragment extends Fragment {
                         Toast.makeText(context, Constants.FILE_SAVE_FAILURE, Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         });
 
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 DatePickerDialog dpdFromDate = new DatePickerDialog(getActivity(), myDateListener, year, month, day);
                 dpdFromDate.show();
-
             }
         });
 
@@ -313,7 +289,7 @@ public class DiaryFragment extends Fragment {
                 try {
 
                     Date date = formatter.parse(dateView.getText().toString());
-                    Calendar cal  = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance();
                     cal.setTime(date);
                     cal.add(Calendar.DATE, -1);
                     year = cal.get(Calendar.YEAR);
@@ -334,13 +310,13 @@ public class DiaryFragment extends Fragment {
                 DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                 try {
                     Date date = formatter.parse(dateView.getText().toString());
-                    Calendar cal  = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance();
                     cal.setTime(date);
                     cal.add(Calendar.DATE, 1);
                     year = cal.get(Calendar.YEAR);
                     month = cal.get(Calendar.MONTH);
                     day = cal.get(Calendar.DAY_OF_MONTH);
-                    _thisDay = showDate(year, month+1, day);
+                    _thisDay = showDate(year, month + 1, day);
                     setView();
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -351,12 +327,22 @@ public class DiaryFragment extends Fragment {
         return rootView;
     }
 
-    public void setView(){
-        ImageAdapter adapterObj = new ImageAdapter(context);
+    @Override
+    public void onPauseFragment() {
+    }
 
+    @Override
+    public void onResumeFragment() {
+    }
+
+    /*
+    Sets the default Diary View after initializing all the default/steady images
+     */
+    public void setView() {
+        ImageAdapter adapterObj = new ImageAdapter(context);
         reports = FileOperationsImpl.readFromFile(context, Constants.REPORTS_FILE);
 
-        if((reports!=null) && (reports.size()!=0)){
+        if ((reports != null) && (reports.size() != 0)) {
             for (String str : reports) {
 
                 String[] data = str.split(",");
@@ -370,14 +356,15 @@ public class DiaryFragment extends Fragment {
                     adapterObj.mThumbIds[position] = idNo;
                 }
             }
-        }
-        else{
-            //nothing
+        } else {
         }
         grid = (GridView) getActivity().findViewById(R.id.valueGrid);
         grid.setAdapter(adapterObj);
     }
 
+    /*
+    Sets & Shows the selected date on the dateView
+     */
     private StringBuilder showDate(int year, int month, int day) {
         StringBuilder date = new StringBuilder().append(day).append("/").
                 append(month).append("/").append(year);
@@ -385,6 +372,9 @@ public class DiaryFragment extends Fragment {
         return date;
     }
 
+    /*
+    Returns the Grid position of selected value
+     */
     public int getPosition(String input, String type) {
         //compute position
         int position = 0;

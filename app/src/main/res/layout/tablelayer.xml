@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context="com.manaksh.milkdiary.fragments.ReportsFragment"
     android:background="@color/transparent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.manaksh.milkdiary.fragments.ReportsFragment">
 
     <TableLayout
         android:id="@+id/tableLayout2"
@@ -31,11 +31,11 @@
                 android:id="@+id/months_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
                 android:gravity="center_vertical|center"
                 android:nestedScrollingEnabled="false"
-                android:spinnerMode="dropdown"
                 android:paddingLeft="@dimen/reports_fragment_horizonal_margin"
-                android:layout_marginLeft="30dp" />
+                android:spinnerMode="dropdown" />
 
         </TableRow>
     </TableLayout>
@@ -47,29 +47,29 @@
         android:layout_alignParentEnd="false"
         android:layout_alignParentStart="true"
         android:layout_alignStart="@id/tagGrid"
+        android:layout_below="@+id/tableLayout2"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:choiceMode="singleChoice"
         android:clickable="true"
+        android:columnWidth="@dimen/reports_fragment_horizonal_margin"
+        android:gravity="center_horizontal"
         android:longClickable="true"
+        android:minWidth="@dimen/activity_horizontal_margin"
         android:nestedScrollingEnabled="false"
         android:numColumns="5"
-        android:visibility="visible"
-        android:transitionGroup="true"
         android:textFilterEnabled="false"
-        android:layout_gravity="center"
-        android:layout_below="@+id/tableLayout2"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:minWidth="@dimen/activity_horizontal_margin"
-        android:gravity="center_horizontal"
-        android:columnWidth="@dimen/reports_fragment_horizonal_margin" />
+        android:transitionGroup="true"
+        android:visibility="visible" />
 
     <TableLayout
         android:id="@+id/tableLayout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:shrinkColumns="*"
-        android:stretchColumns="*"
         android:layout_below="@+id/tagGrid"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
 
         <TableRow
             android:id="@+id/tr1"
@@ -77,28 +77,28 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
-                android:layout_width="@dimen/reports_fragment_horizonal_margin"/>
+                android:layout_width="@dimen/reports_fragment_horizonal_margin"
+                android:layout_height="@dimen/reports_fragment_vertical_margin" />
 
             <ImageView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@drawable/orange"/>
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:src="@drawable/orange" />
 
             <ImageView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@drawable/blue"/>
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:src="@drawable/blue" />
 
             <ImageView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@drawable/yellow"/>
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:src="@drawable/yellow" />
 
             <ImageView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@drawable/milkman"/>
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:src="@drawable/milkman" />
 
         </TableRow>
 
@@ -110,46 +110,49 @@
             android:layout_marginTop="@dimen/activity_vertical_margin">
 
             <ImageView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@mipmap/check"/>
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:src="@mipmap/check" />
 
-                <TextView
-                    android:id="@+id/tv1"
-                    android:layout_height="@dimen/reports_fragment_vertical_margin"
-                    android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                    android:text="0"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tv2"
-                    android:layout_height="@dimen/reports_fragment_vertical_margin"
-                    android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                    android:text="0"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/tv3"
-                    android:layout_height="@dimen/reports_fragment_vertical_margin"
-                    android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                    android:text="0"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/tv4"
-                    android:layout_height="@dimen/reports_fragment_vertical_margin"
-                    android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                    android:text="0"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="@dimen/reports_fragment_horizonal_margin"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="@dimen/reports_fragment_horizonal_margin"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="@dimen/reports_fragment_horizonal_margin"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="@dimen/reports_fragment_horizonal_margin"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold" />
 
         </TableRow>
 
@@ -159,126 +162,129 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:src="@drawable/cross"/>
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
+                android:src="@drawable/cross" />
 
             <TextView
                 android:id="@+id/tv5"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="0"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv6"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="0"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv7"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="0"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv8"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="0"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </TableRow>
     </TableLayout>
 
     <TableLayout
+        android:id="@+id/tableLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tableLayout4"
-        android:gravity="center"
-        android:stretchColumns="*"
-        android:shrinkColumns="*"
         android:layout_below="@+id/tableLayout3"
-        android:layout_marginTop="@dimen/reports_fragment_horizonal_margin">
-        <TableRow android:gravity="center|center_horizontal"
-            android:clickable="true">
+        android:layout_marginTop="@dimen/reports_fragment_horizonal_margin"
+        android:gravity="center"
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:clickable="true"
+            android:gravity="center|center_horizontal">
+
             <TextView
                 android:id="@+id/tv9"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="NET : "
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="NET : "
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv10"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="0"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv11"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="*"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="*"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/activity_vertical_margin"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/et1"
-                android:layout_height="50dp"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
+                android:layout_height="50dp"
+                android:autoLink="none"
+                android:background="@color/transparent"
                 android:gravity="center"
+                android:hint="price"
+                android:inputType="number"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"
-                android:autoLink="none"
-                android:hint="price"
-                android:background="@color/transparent"
-                android:inputType="number"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv12"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="="
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="="
                 android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/activity_vertical_margin"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv13"
-                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:layout_width="@dimen/reports_fragment_horizonal_margin"
-                android:text="0"
+                android:layout_height="@dimen/reports_fragment_vertical_margin"
                 android:gravity="center"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </TableRow>
     </TableLayout>

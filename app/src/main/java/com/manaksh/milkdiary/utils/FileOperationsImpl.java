@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +23,10 @@ import java.util.Map;
  */
 public class FileOperationsImpl {
 
+    /*
+    Reads data from file
+    Returns : ArrayList
+     */
     public static ArrayList<String> readFromFile(Context context, String FILE_NAME) {
 
         ArrayList<String> listfromFile = new ArrayList<String>();
@@ -32,24 +35,18 @@ public class FileOperationsImpl {
         BufferedReader br = null;
 
         try {
-            /*File f = new File(FILE_NAME);
-            if(!f.exists()){
+            File file = context.getFileStreamPath(FILE_NAME);
+            if (file == null || !file.exists()) {
                 return null;
-            }
-            else{*/
-                File file = context.getFileStreamPath(FILE_NAME);
-                if(file==null || !file.exists()){
-                    return null;
-                }
-                else{
-                    fileIn = context.openFileInput(FILE_NAME);
-                    String sCurrentLine;
+            } else {
+                fileIn = context.openFileInput(FILE_NAME);
+                String sCurrentLine;
 
-                    br = new BufferedReader(new InputStreamReader(fileIn));
-                    while ((sCurrentLine = br.readLine()) != null) {
-                        listfromFile.add(sCurrentLine);
-                    }
+                br = new BufferedReader(new InputStreamReader(fileIn));
+                while ((sCurrentLine = br.readLine()) != null) {
+                    listfromFile.add(sCurrentLine);
                 }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -63,6 +60,9 @@ public class FileOperationsImpl {
         return listfromFile;
     }
 
+    /*
+    Writes Tags to the Tag File
+     */
     public static void writeToFile(Context context, String txt) {
         Toast.makeText(context, txt,
                 Toast.LENGTH_SHORT).show();
@@ -87,6 +87,9 @@ public class FileOperationsImpl {
         }
     }
 
+    /*
+    Writes data to the reports file
+     */
     public static boolean writeToFile(Context context, HashMap<Integer, DailyData> dailyDataMap) {
 
         try {
@@ -98,7 +101,7 @@ public class FileOperationsImpl {
                 return false;
             } else {
 
-                for(Map.Entry map : dailyDataMap.entrySet()){
+                for (Map.Entry map : dailyDataMap.entrySet()) {
                     DailyData data = (DailyData) map.getValue();
 
                     String txt = "";
@@ -110,17 +113,6 @@ public class FileOperationsImpl {
                         outputWriter.newLine();
                     }
                 }
-
-                /*for (DailyData data : dailyDataList) {
-                    String txt = "";
-                    if (data.getDate().equals("") || data.getType() == null || data.getQuantity() == 0 || data.getTransactionType() == null) {
-                        return false;
-                    } else {
-                        txt = data.getDate() + "," + data.getType() + "," + data.getQuantity() + "," + data.getTransactionType();
-                        outputWriter.write(txt);
-                        outputWriter.newLine();
-                    }
-                }*/
                 outputWriter.close();
                 return true;
             }
