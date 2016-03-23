@@ -89,6 +89,8 @@ public class FileOperationsImpl {
 
     /*
     Writes data to the reports file
+
+    Date,ORANGE,2.5,HIT
      */
     public static boolean writeToFile(Context context, HashMap<Integer, DailyData> dailyDataMap) {
 

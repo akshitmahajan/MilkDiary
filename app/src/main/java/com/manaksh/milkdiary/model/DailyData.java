@@ -3,13 +3,13 @@ package com.manaksh.milkdiary.model;
 public class DailyData {
     private String date;
     private ItemType type;
-    private double quantity;
+    private Double quantity;
     private TransactionType transactionType;
 
     public DailyData() {
     }
 
-    public DailyData(String date, ItemType type, int quantity,
+    public DailyData(String date, ItemType type, Double quantity,
                      TransactionType transactionType) {
         super();
         this.date = date;
@@ -38,7 +38,7 @@ public class DailyData {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 

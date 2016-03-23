@@ -44,7 +44,7 @@ public class DiaryFragment extends Fragment implements FragmentLifecycle {
     HashMap<Integer, DailyData> ls_databean = new HashMap<Integer, DailyData>();
     //List<DailyData> ls_databean = new ArrayList<DailyData>();
     ImageButton btn_Save = null;
-    ArrayList<String> reports = new ArrayList<String>();
+    ArrayList<DailyData> reports = new ArrayList<DailyData>();
     StringBuilder _thisDay = null;
     /*
     Initializes the DataPicker
@@ -101,23 +101,28 @@ public class DiaryFragment extends Fragment implements FragmentLifecycle {
         day = calendar.get(Calendar.DAY_OF_MONTH);
         _thisDay = showDate(year, month + 1, day);
 
-        reports = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.REPORTS_FILE);
+        //reports = FileOperationsImpl.readFromFile(getActivity().getBaseContext(), Constants.REPORTS_FILE);
+        reports = null;
+
         final ImageAdapter adapterObj = new ImageAdapter(context);
         //adapterObj = loadAdapter(reports, dateView, adapterObj);
 
+       // Date,ORANGE,2.5,HIT
         if (reports != null) {
 
-            for (String str : reports) {
+            for (DailyData data : reports) {
 
-                String[] data = str.split(",");
+                //String[] data = str.split(",");
 
                 //split with . & form the image name
-                String[] image_name = data[2].split("\\.");
+                //String[] image_name = data[2].split("\\.");
 
-                if (data[0].equals(dateView.getText().toString())) {
+                String[] image_name = new Double(data.getQuantity()).toString().split("\\.");
 
-                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "mipmap", context.getPackageName());
-                    int position = getPosition(data[2], data[1]);
+                if (data.getDate().equals(dateView.getText().toString())) {
+
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data.getTransactionType(), "mipmap", context.getPackageName());
+                    int position = getPosition(new Double(data.getQuantity()).toString(), data.getTransactionType().toString());
                     adapterObj.mThumbIds[position] = idNo;
                 }
             }
@@ -340,19 +345,22 @@ public class DiaryFragment extends Fragment implements FragmentLifecycle {
      */
     public void setView() {
         ImageAdapter adapterObj = new ImageAdapter(context);
-        reports = FileOperationsImpl.readFromFile(context, Constants.REPORTS_FILE);
+        //reports = FileOperationsImpl.readFromFile(context, Constants.REPORTS_FILE);
+
+        reports = null;
 
         if ((reports != null) && (reports.size() != 0)) {
-            for (String str : reports) {
+            for (DailyData data : reports) {
 
-                String[] data = str.split(",");
+                //String[] data = str.split(",");
                 //split with . & form the image name
-                String[] image_name = data[2].split("\\.");
+                //String[] image_name = data[2].split("\\.");
+                String[] image_name = new Double(data.getQuantity()).toString().split("\\.");
 
-                if (data[0].equals(dateView.getText().toString())) {
-                    String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data[3];
-                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data[3], "mipmap", context.getPackageName());
-                    int position = getPosition(data[2], data[1]);
+                if (data.getDate().equals(dateView.getText().toString())) {
+                    String txt = "_" + image_name[0] + "_" + image_name[1] + "_" + data.getTransactionType();
+                    int idNo = getResources().getIdentifier("_" + image_name[0] + "_" + image_name[1] + "_" + data.getTransactionType(), "mipmap", context.getPackageName());
+                    int position = getPosition(new Double(data.getQuantity()).toString(), data.getTransactionType().toString());
                     adapterObj.mThumbIds[position] = idNo;
                 }
             }
